@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Log in or sign up</title>
+        <style>
+            div.row {
+                display: flex;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-sm-10"></div>
+            <a class="btn btn-success col-sm-2" href="/Registration/Index">Registruj se</a>
+        </div>
+        <br />
+        <h2 class="text-info">Ulogujte se:</h2>
+        <br />
+        <form method="post" action="~/Authentication/Login" onsubmit="return validateForm()">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-sm-2">Korisnicko ime:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" onchange="UserNameCheck()" maxlength="30" placeholder="Unesite korisnicko ime" id="korisnickoIme" name="korisnickoIme" />
+                    </div>
+                    <label class="col-sm-4" id="Status1"></label>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Lozinka:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="password" onchange="PasswordCheck()" maxlength="30" placeholder="Unesite lozinku" id="lozinka" name="lozinka" />
+                    </div>
+                    <label class="col-sm-4" id="Status2"><font color="Red"></font></label>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-4">
+                        <input class="btn btn-primary" type="submit" value="Uloguj se" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br /> <br />
+    </body>
+</html>

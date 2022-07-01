@@ -1,0 +1,317 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registracija</title>
+    <script>
+        var username = true;
+        var email = true;
+
+        function UserCheck() {
+            if ($("#KorisnickoIme").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#KorisnickoIme").css("border-color", "Red");
+            } else {
+                $.post("@Url.Action("CheckUserAvailability", "Registration")",
+                {
+                    userdata: $("#KorisnickoIme").val()
+                },
+                function (data) {
+                    if (data == 0) {
+                        $("#Status1").html('<font color="Green">Korisnicko ime je slobodno!</font>');
+                        $("#KorisnickoIme").css("border-color", "GreenYellow");
+                        username = true;
+                    } else {
+                        $("#Status1").html('<font color="Red">Ovo korisnicko ime je zauzeto!</font>');
+                        $("#KorisnickoIme").css("border-color", "Red");
+                        username = false;
+                    }
+                });
+            }
+        }
+        function ImeEmpty() {
+            if ($("#Ime").val() == "") {
+                $("#Status4").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Ime").css("border-color", "Red");
+            } else {
+                $("#Status4").html('');
+                $("#Ime").css("border-color", "lightgray");
+            }
+        }
+        function PrezimeEmpty() {
+            if ($("#Prezime").val() == "") {
+                $("#Status5").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Prezime").css("border-color", "Red");
+            } else {
+                $("#Status5").html('');
+                $("#Prezime").css("border-color", "lightgray");
+            }
+        }
+        function AdresaEmpty() {
+            if ($("#Adresa").val() == "") {
+                $("#Status7").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Adresa").css("border-color", "Red");
+            } else {
+                $("#Status7").html('');
+                $("#Adresa").css("border-color", "lightgray");
+            }
+        }
+        function DatumEmpty() {
+            if ($("#DatumRodjenja").val() == "") {
+                $("#Status8").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#DatumRodjenja").css("border-color", "Red");
+            } else {
+                $("#Status8").html('');
+                $("#DatumRodjenja").css("border-color", "lightgray");
+            }
+        }
+        function EmailValidation() {
+            if ($("#Email").val() == "") {
+                $("#Status6").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Email").css("border-color", "Red");
+            } else {
+                $.post("@Url.Action("EmailValidation", "Registration")",
+                {
+                    email: $("#Email").val()
+                },
+                function (data) {
+                    if (data == 0) {
+                        $("#Status6").html('<font color="Red">Email nije validan!</font>');
+                        $("#Email").css("border-color", "Red");
+                        email = false;
+                    } else {
+                        $("#Status6").html('');
+                        $("#Email").css("border-color", "lightgray");
+                        email = true;
+                    }
+                });
+            }
+        }
+
+        function vratiDatum() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("DatumRodjenja").setAttribute("max", today);
+        }
+
+        function LozinkaEmpty() {
+            if ($("#Lozinka").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Lozinka").css("border-color", "Red");
+            } else {
+                $("#Status2").html('');
+                $("#Lozinka").css("border-color", "lightgray");
+            }
+        }
+
+        function ponovoLozinkaEmpty() {
+            if ($("#ponovoLozinka").val() == "") {
+                $("#Status3").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#ponovoLozinka").css("border-color", "Red");
+            } else {
+                $("#Status3").html('');
+                $("#ponovoLozinka").css("border-color", "lightgray");
+            }
+        }
+
+
+
+        function validateForm() {
+            var dobro = true;
+
+            if ($("#KorisnickoIme").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#KorisnickoIme").css("border-color", "Red");
+                dobro = false;
+            } else if (username) {
+                $("#Status1").html('');
+                $("#KorisnickoIme").css("border-color", "GreenYellow");
+            }
+            if ($("#Lozinka").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Lozinka").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status2").html('');
+                $("#Lozinka").css("border-color", "lightgray");
+            }
+            if ($("#ponovoLozinka").val() == "") {
+                $("#Status3").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#ponovoLozinka").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status3").html('');
+                $("#ponovoLozinka").css("border-color", "lightgray");
+            }
+            if ($("#Ime").val() == "") {
+                $("#Status4").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Ime").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status4").html('');
+                $("#Ime").css("border-color", "lightgray");
+            }
+            if ($("#Prezime").val() == "") {
+                $("#Status5").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Prezime").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status5").html('');
+                $("#Prezime").css("border-color", "lightgray");
+            }
+            if ($("#Email").val() == "") {
+                $("#Status6").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Email").css("border-color", "Red");
+                dobro = false;
+            } else if (email) {
+                $("#Status6").html('');
+                $("#Email").css("border-color", "lightgray");
+            }
+            if ($("#Adresa").val() == "") {
+                $("#Status7").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Adresa").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status7").html('');
+                $("#Adresa").css("border-color", "lightgray");
+            }
+            if ($("#DatumRodjenja").val() == "") {
+                $("#Status8").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#DatumRodjenja").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status8").html('');
+                $("#DatumRodjenja").css("border-color", "lightgray");
+            }
+            if ($("#Lozinka").val() != $("#ponovoLozinka").val()) {
+                $("#Status3").html('<font color="Red">Lozinke se ne poklapaju!</font>');
+                $("#ponovoLozinka").css("border-color", "Red");
+                dobro = false;
+            }
+
+            return (dobro && username && email);
+        }
+
+    </script>
+
+    <style>
+        p.tekstic {
+            color: grey;
+        }
+        div.row {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body onload="javascript:vratiDatum()">
+    <h2>Registrujte novog korisnika:</h2>
+    <br />
+    <form method="post" action="~/Registration/Add" onsubmit="return validateForm()">
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-sm-2">Korisnicko ime:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" placeholder="Unesite korisnicko ime" maxlength="30" id="KorisnickoIme" name="KorisnickoIme" onchange="UserCheck()" />
+                </div>
+                <label class="col-sm-4" id="Status1"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Lozinka:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="password" onchange="LozinkaEmpty()" placeholder="Unesite lozinku" id="Lozinka" name="Lozinka" />
+                </div>
+                <label class="col-sm-4" id="Status2"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Ponovi lozinku:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="password" onchange="ponovoLozinkaEmpty()" placeholder="Unesite lozinku ponovo" id="ponovoLozinka" name="ponovoLozinka" />
+                </div>
+                <label class="col-sm-4" id="Status3"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Ime:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" placeholder="Unesite ime" onchange="ImeEmpty()" maxlength="20" id="Ime" name="Ime" />
+                </div>
+                <label class="col-sm-4" id="Status4"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Prezime:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" onchange="PrezimeEmpty()" placeholder="Unesite prezime" maxlength="30" id="Prezime" name="Prezime" />
+                </div>
+                <label class="col-sm-4" id="Status5"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Email:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" onchange="EmailValidation()" type="email" maxlength="40" placeholder="Unesite email adresu" id="Email" name="Email" />
+                </div>
+                <label class="col-sm-4" id="Status6"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Adresa:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" onchange="AdresaEmpty()" placeholder="Unesite adresu stanovnja" maxlength="30" id="Adresa" name="Adresa" />
+                </div>
+                <label class="col-sm-4" id="Status7"></label>
+            </div>
+            <div class="row">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-4">
+                    <p class="tekstic"><i>U formatu adresa i broj, grad, postanski broj</i></p>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-sm-2">Datum rodjenja:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="date" onchange="DatumEmpty()" id="DatumRodjenja" min='1899-01-01' name="DatumRodjenja" />
+                </div>
+                <label class="col-sm-4" id="Status8"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Registrujem se kao:</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="TipKorisnika">
+                        <option value="POTROSAC">Potrosac</option>
+                        <option value="DOSTAVLJAC">Dostavljac</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-4">
+                    <input class="btn btn-primary" type="submit" id="dugme" value="Registrujte se" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
