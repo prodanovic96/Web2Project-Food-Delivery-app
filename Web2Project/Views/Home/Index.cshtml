@@ -14,6 +14,73 @@
                 align-items: center;
             }
         </style>
+        <script>
+
+            var username = true;
+
+            function UserNameCheck() {
+                if ($("#korisnickoIme").val() == "") {
+
+                    $("#Status1").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                    $("#korisnickoIme").css("border-color", "Red");
+
+                }else{
+                    $.post("@Url.Action("CheckUserAvailability", "Registration")",
+                    {
+                        userdata: $("#korisnickoIme").val()
+                    },
+                    function (data) {
+                        if (data == 0) {
+
+                            $("#Status1").html('<font color="Red">Ovo korisnicko ime ne postoji!</font>');
+                            $("#korisnickoIme").css("border-color", "Red");
+                            username = false;
+                        } else {
+
+                            $("#Status1").html('');
+                            $("#korisnickoIme").css("border-color", "lightgray");
+                            username = true;
+                        }
+                    });
+                }
+            }
+
+            function PasswordCheck() {
+                if ($("#lozinka").val() == "") {
+
+                    $("#Status2").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                    $("#lozinka").css("border-color", "Red");
+
+                } else {
+                    $("#Status2").html('');
+                    $("#lozinka").css("border-color", "lightgray");
+                }
+            }
+
+            function validateForm() {
+
+                var dobro = true;
+
+                if ($("#korisnickoIme").val() == "") {
+                    $("#Status1").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                    $("#korisnickoIme").css("border-color", "Red");
+                    dobro = false;
+                } else if (username) {
+                    $("#Status1").html('');
+                    $("#korisnickoIme").css("border-color", "lightgray");
+                }
+                if ($("#lozinka").val() == "") {
+                    $("#Status2").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                    $("#lozinka").css("border-color", "Red");
+                    dobro = false;
+                } else {
+                    $("#Status2").html('');
+                    $("#lozinka").css("border-color", "lightgray");
+                }
+
+                return (dobro && username);
+            }
+        </script>
     </head>
     <body>
         <div class="row">

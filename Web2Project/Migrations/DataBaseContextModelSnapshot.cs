@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web2Project.Repository;
 
 namespace Web2Project.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20220622192051_addedVerifikovan")]
-    partial class addedVerifikovan
+    partial class DataBaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +40,9 @@ namespace Web2Project.Migrations
 
                     b.Property<string>("KorisnickoIme")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LogedIn")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Lozinka")
                         .HasColumnType("nvarchar(max)");

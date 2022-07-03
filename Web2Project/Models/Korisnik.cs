@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Web2Project.Models
 {
@@ -18,7 +16,7 @@ namespace Web2Project.Models
         public Tip TipKorisnika { get; set; }
         public Zahtev Verifikovan { get; set; }
         public bool LogedIn { get; set; }
-        //public System.Drawing.Image Slika;
+        //public virtual ICollection<Porudzbina> Porudzbine { get; set; }
 
         public void LogIn()
         {

@@ -9,5 +9,7 @@ namespace Web2Project.Helper
         Korisnik Get(string korisnickoIme);
 
         bool Existing(string korisnickoIme);
+
+        void UpdateKorisnik(Korisnik korisnik, string property, string value);
     }
 }

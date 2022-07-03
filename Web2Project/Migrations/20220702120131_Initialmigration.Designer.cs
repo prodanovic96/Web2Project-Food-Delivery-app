@@ -10,8 +10,8 @@ using Web2Project.Repository;
 namespace Web2Project.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20220622191600_initialmigration")]
-    partial class initialmigration
+    [Migration("20220702120131_Initialmigration")]
+    partial class Initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,9 @@ namespace Web2Project.Migrations
                     b.Property<string>("KorisnickoIme")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("LogedIn")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lozinka")
                         .HasColumnType("nvarchar(max)");
 
@@ -50,6 +53,9 @@ namespace Web2Project.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TipKorisnika")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Verifikovan")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

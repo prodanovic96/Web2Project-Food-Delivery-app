@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Web2Project.Migrations
 {
-    public partial class initialmigration : Migration
+    public partial class Initialmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,7 +20,9 @@ namespace Web2Project.Migrations
                     Prezime = table.Column<string>(nullable: true),
                     DatumRodjenja = table.Column<DateTime>(nullable: false),
                     Adresa = table.Column<string>(nullable: true),
-                    TipKorisnika = table.Column<int>(nullable: false)
+                    TipKorisnika = table.Column<int>(nullable: false),
+                    Verifikovan = table.Column<int>(nullable: false),
+                    LogedIn = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,0 +1,130 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+    <script>
+
+        function StaraLozinkaEmpty() {
+            if ($("#lozinka").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#lozinka").css("border-color", "Red");
+            } else {
+                $("#Status1").html('');
+                $("#lozinka").css("border-color", "lightgray");
+            }
+        }
+
+        function NovaLozinkaEmpty() {
+            if ($("#novalozinka").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#novalozinka").css("border-color", "Red");
+            } else {
+                $("#Status2").html('');
+                $("#novalozinka").css("border-color", "lightgray");
+            }
+        }
+
+        function PonovljenaEmpty() {
+            if ($("#novalozinkaponovo").val() == "") {
+                $("#Status3").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#novalozinkaponovo").css("border-color", "Red");
+            } else {
+                $("#Status3").html('');
+                $("#novalozinkaponovo").css("border-color", "lightgray");
+            }
+        }
+
+        function validateForm() {
+            var dobro = true;
+
+            if ($("#lozinka").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#lozinka").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status1").html('');
+                $("#lozinka").css("border-color", "lightgray");
+            }
+
+            if ($("#novalozinka").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#novalozinka").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status2").html('');
+                $("#novalozinka").css("border-color", "lightgray");
+            }
+
+            if ($("#novalozinkaponovo").val() == "") {
+                $("#Status3").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#novalozinkaponovo").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status3").html('');
+                $("#novalozinkaponovo").css("border-color", "lightgray");
+            }
+
+            return dobro;
+        }
+
+    </script>
+
+    <style>
+        div.row {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body>
+    <br /><br />
+    <form method="post" action="~/MojNalog/LozinkaPromenjena" onsubmit="return validateForm()">
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-sm-2">Vezeca lozinka</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" placeholder="Unesite vazecu lozinku" onchange="StaraLozinkaEmpty()" type="password" id="lozinka" name="lozinka" />
+                </div>
+                <label id="Status1" class="control-label col-sm-4"><font color="Red">@ViewBag.Message1</font></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Nova lozinka</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" placeholder="Unesite novu lozinku" onchange="NovaLozinkaEmpty()" type="password" id="novalozinka" name="novalozinka" />
+                </div>
+                <label id="Status2" class="control-label col-sm-4"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Ponovite novu lozinku</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" placeholder="Ponovo unesite lozinku" onchange="PonovljenaEmpty()" type="password" id="novalozinkaponovo" name="novalozinkaponovo" />
+                </div>
+                <label id="Status3" class="control-label col-sm-4"><font color="Red">@ViewBag.Message2</font></label>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

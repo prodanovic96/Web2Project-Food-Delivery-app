@@ -29,6 +29,10 @@ namespace Web2Project
             services.AddControllersWithViews();
             services.AddDbContext<DataBaseContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddSession(options => { 
+                options.IdleTimeout = TimeSpan.FromMinutes(30); 
+            });
+
             services.AddScoped<IUserRepository, UserRepository>();
         }
 
@@ -48,7 +52,7 @@ namespace Web2Project
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            
+            app.UseSession();
 
             app.UseRouting();
 

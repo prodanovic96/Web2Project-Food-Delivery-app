@@ -35,5 +35,15 @@ namespace Web2Project.Helper
 
             return result;
         }
+
+        public void UpdateKorisnik(Korisnik korisnik, string property, string value)
+        {
+            var result = _dbcontext.Korisnik.Where(k => k.Id == korisnik.Id).FirstOrDefault();
+
+            result.GetType().GetProperty(property).SetValue(result, value);
+
+            _dbcontext.SaveChanges();
+        }
     }
 }
+ 

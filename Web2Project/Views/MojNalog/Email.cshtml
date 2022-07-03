@@ -1,0 +1,122 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>E-mail</title>
+
+    <script>
+
+        function emailEmpty() {
+            if ($("#email").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#email").css("border-color", "Red");
+            } else {
+                $.post("@Url.Action("EmailValidation", "Registration")",
+                {
+                    email: $("#email").val()
+                },
+                function (data) {
+                    if (data == 0) {
+                        $("#Status1").html('<font color="Red">Email nije validan!</font>');
+                        $("#email").css("border-color", "Red");
+                        email = false;
+                    } else {
+                        $("#Status1").html('');
+                        $("#email").css("border-color", "lightgray");
+                        email = true;
+                    }
+                });
+            }
+        }
+
+        function lozinkaEmpty() {
+            if ($("#lozinka").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#lozinka").css("border-color", "Red");
+            } else {
+                $("#Status2").html('');
+                $("#lozinka").css("border-color", "lightgray");
+            }
+        }
+
+        function validateForm() {
+            var dobro = true;
+
+            if ($("#email").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#email").css("border-color", "Red");
+                dobro = false;
+            } else if(email){
+                $("#Status1").html('');
+                $("#email").css("border-color", "lightgray");
+            }
+
+            if ($("#lozinka").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#lozinka").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status2").html('');
+                $("#lozinka").css("border-color", "lightgray");
+            }
+
+            return (dobro && email);
+        }
+    </script>
+
+    <style>
+        div.row {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body>
+    <br /><br />
+    <table>
+        <tr>
+            <td><strong>Trenutna e-mail adresa</strong></td>
+        </tr>
+        <tr>
+            <td align="center">@ViewBag.korisnik.Email</td>
+        </tr>
+    </table>
+    <br /><br />
+    <form method="post" action="~/MojNalog/EmailPromenjen" onsubmit="return validateForm()">
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-sm-2">Nova e-mail adresa</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" placeholder="Unesite novu e-mail adresu" onchange="emailEmpty()" type="email" maxlength="40" id="email" name="email" />
+                </div>
+                <label id="Status1" class="control-label col-sm-4"><font color="Red">@ViewBag.Message1</font></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Vazeca lozinka</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" placeholder="Unesite vazecu lozinku" onchange="lozinkaEmpty()" type="password" id="lozinka" name="lozinka" />
+                </div>
+                <label id="Status2" class="control-label col-sm-4"><font color="Red">@ViewBag.Message2</font></label>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

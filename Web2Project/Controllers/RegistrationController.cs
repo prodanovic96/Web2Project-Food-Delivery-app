@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Text.RegularExpressions;
 using Web2Project.Helper;
@@ -47,19 +49,30 @@ namespace Web2Project.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(Korisnik korisnik)
+        public ActionResult Add(Korisnik korisnik, string ponovoLozinka)
         {
-            bool isEmail = Regex.IsMatch(korisnik.Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
-            if (korisnik.KorisnickoIme == null || korisnik.KorisnickoIme == "" || korisnik.Ime == null || korisnik.Ime == "" || korisnik.Prezime == null || korisnik.Prezime == "" || korisnik.Lozinka == null || korisnik.Lozinka == "" || korisnik.Email == null || korisnik.Email == "" || korisnik.DatumRodjenja > DateTime.Now || !isEmail)
+            if (korisnik.KorisnickoIme == null || korisnik.KorisnickoIme == "" || korisnik.Ime == null || korisnik.Ime == "" || korisnik.Prezime == null || korisnik.Prezime == "" || korisnik.Lozinka == null || korisnik.Lozinka == "" || korisnik.Email == null || korisnik.Email == "" || korisnik.DatumRodjenja > DateTime.Now)
             {
-                // Sva polja moraju biti pravilno popunjena
+                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Sva polja moraju biti popunjena"));
                 return RedirectToAction("Index");
             }
 
-            // Da li vec postoji u bazi takvo username
-            if (!_userRepository.Existing(korisnik.KorisnickoIme))
+            if (_userRepository.Existing(korisnik.KorisnickoIme))
             {
-                if(korisnik.TipKorisnika == Tip.POTROSAC)
+                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Korisnicko ime je zauzeto"));
+                return RedirectToAction("Index");
+            }
+
+            if(korisnik.Lozinka != ponovoLozinka)
+            {
+                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Lozinke se ne poklapaju!"));
+                return RedirectToAction("Index");
+            }
+
+            bool isEmail = Regex.IsMatch(korisnik.Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
+            if (isEmail)
+            {
+                if (korisnik.TipKorisnika == Tip.POTROSAC)
                 {
                     korisnik.Verifikovan = Zahtev.PRIHVACEN;
                 }
@@ -70,9 +83,15 @@ namespace Web2Project.Controllers
 
                 korisnik.Lozinka = Operations.hashPassword(korisnik.Lozinka);
                 _userRepository.Add(korisnik);
-            }
 
-            return RedirectToAction("Index","Home");
+                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Korisnik uspesno registrovan!"));
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Email nije validan"));
+                return RedirectToAction("Index");
+            }
         }
     }
 }
