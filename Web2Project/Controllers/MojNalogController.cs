@@ -22,6 +22,11 @@ namespace Web2Project.Controllers
 
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
             return View();
         }
@@ -122,24 +127,28 @@ namespace Web2Project.Controllers
                     _userRepository.UpdateKorisnik(korisnik, "Email", email);
 
                     HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Email uspesno izmenjen!"));
+
+                    HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
                 }
                 else
                 {
                     if (!isEmail)
                     {
-                        HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Email nije validan!"));
+                        //HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Email nije validan!"));
+                        ViewBag.Message1 = "Email nije validan";
                     }
 
                     if (lozinka != korisnik.Lozinka)
                     {
-                        HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Neispravna lozinka!"));
+                        //HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Neispravna lozinka!"));
+                        ViewBag.Message2 = "Neispravna lozinka";
                     }
 
-                    HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+                    ViewBag.korisnik = korisnik;
                     return View("Email");
                 }
             }
-            HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+            ViewBag.korisnik = korisnik;
             return RedirectToAction("Index");
         }
 
@@ -168,6 +177,7 @@ namespace Web2Project.Controllers
                     _userRepository.UpdateKorisnik(korisnik, "Lozinka", novalozinka);
 
                     HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Lozinka uspesno izmenjena!"));
+                    HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
                 }
                 else
                 {

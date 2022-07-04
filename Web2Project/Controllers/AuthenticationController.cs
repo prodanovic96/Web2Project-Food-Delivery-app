@@ -12,9 +12,18 @@ namespace Web2Project.Controllers
 
         /*
           
-         https://medium.com/c-sharp-progarmming/tutorial-code-first-approach-in-asp-net-core-mvc-with-ef-5baf5af696e9
-         https://www.learnentityframeworkcore.com/dbcontext/modifying-data
-         https://www.learnentityframeworkcore.com/dbcontext/modifying-data
+        https://medium.com/c-sharp-progarmming/tutorial-code-first-approach-in-asp-net-core-mvc-with-ef-5baf5af696e9
+        https://www.learnentityframeworkcore.com/dbcontext/modifying-data
+        https://www.learnentityframeworkcore.com/dbcontext/modifying-data
+        https://www.entityframeworktutorial.net/efcore/configure-one-to-one-relationship-using-fluent-api-in-ef-core.aspx
+        https://docs.oracle.com/cd/E17952_01/connector-net-en/connector-net-entityframework-core-example.html
+        https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli
+        https://stackoverflow.com/questions/21573550/setting-unique-constraint-with-fluent-api
+        https://www.learnentityframeworkcore.com/configuration/fluent-api/hasforeignkey-method
+
+        Bitno
+        https://www.learnentityframeworkcore.com/dbcontext/modifying-data
+        https://medium.com/c-sharp-progarmming/tutorial-code-first-approach-in-asp-net-core-mvc-with-ef-5baf5af696e9
 
          */
 
@@ -25,6 +34,37 @@ namespace Web2Project.Controllers
 
         public IActionResult Index()
         {
+            Korisnik korisnik = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (korisnik == null)
+                {
+                    korisnik = new Korisnik();
+                }
+                else
+                {
+                    if (korisnik.TipKorisnika == Tip.ADMINISTRATOR)
+                    {
+                        return RedirectToAction("Index", "Administrator");
+                    }
+                    else if (korisnik.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                } 
+            }
+
+            ViewBag.Ime = "";
+            ViewBag.Message = "";
+
+            ViewBag.korisnik = korisnik;
             return View();
         }
 
@@ -33,13 +73,13 @@ namespace Web2Project.Controllers
         {
             if (korisnickoIme == "" || korisnickoIme == null || lozinka == "" || lozinka == null)
             {
-                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Sva polja moraju biti popunjena"));
+                HttpContext.Session.SetString("AlertMessage", "Sva polja moraju biti popunjena");
                 return View("Index", "Home");
             }
 
             if (!_userRepository.Existing(korisnickoIme))
             {
-                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Ovo korisnicko ime ne postoji"));
+                HttpContext.Session.SetString("AlertMessage", "Ovo korisnicko ime ne postoji");
                 return View("Index", "Home");
             }
 
@@ -48,7 +88,11 @@ namespace Web2Project.Controllers
 
             if(korisnik.Lozinka != lozinka)
             {
-                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Pogresna lozinka"));
+                ViewBag.Ime = korisnickoIme;
+                ViewBag.korisnik = new Korisnik();
+                ViewBag.Message = "Pogresna lozinka";
+
+                HttpContext.Session.SetString("AlertMessage","Pogresna lozinka");
                 return View("Index", "Home");
             }
 
@@ -60,7 +104,7 @@ namespace Web2Project.Controllers
             korisnik.LogIn();
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
 
-            HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Korisnik: " + korisnickoIme + " uspesno ulogovan!"));
+            HttpContext.Session.SetString("AlertMessage", ("Korisnik: " + korisnickoIme + " uspesno ulogovan!"));
 
             if(korisnik.TipKorisnika == Tip.ADMINISTRATOR)
             {
@@ -78,11 +122,10 @@ namespace Web2Project.Controllers
             Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
 
             korisnik.LogOut();
-            korisnik = new Korisnik();
 
-            HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+            HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(null));
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Authentication");
         }
     }
 }

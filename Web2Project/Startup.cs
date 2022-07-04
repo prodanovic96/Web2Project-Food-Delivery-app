@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,9 @@ namespace Web2Project
             services.AddControllersWithViews();
             services.AddDbContext<DataBaseContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddSession(options => { 
+            services.AddSession(options => {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(30); 
             });
 
@@ -56,14 +60,18 @@ namespace Web2Project
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Authentication}/{action=Index}/{id?}");
             });
+
+
+           
         }
     }
 }

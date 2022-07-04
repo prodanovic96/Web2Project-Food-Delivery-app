@@ -19,6 +19,35 @@ namespace Web2Project.Controllers
 
         public IActionResult Index()
         {
+            Korisnik korisnik = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (korisnik == null)
+                {
+                    korisnik = new Korisnik();
+                }
+                else
+                {
+                    if (korisnik.TipKorisnika == Tip.ADMINISTRATOR)
+                    {
+                        return RedirectToAction("Index", "Administrator");
+                    }
+                    else if (korisnik.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                }
+            }
+
+            ViewBag.korisnik = korisnik;
+
             return View();
         }
         

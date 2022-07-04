@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using Web2Project.Models;
 
@@ -16,7 +18,7 @@ namespace Web2Project.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Authentication");
         }
 
         public IActionResult Privacy()

@@ -18,6 +18,11 @@ namespace Web2Project.Models
         public bool LogedIn { get; set; }
         //public virtual ICollection<Porudzbina> Porudzbine { get; set; }
 
+        public Korisnik()
+        {
+            LogedIn = false;
+        }
+
         public void LogIn()
         {
             LogedIn = true;
