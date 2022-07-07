@@ -36,12 +36,44 @@ namespace Web2Project.Helper
             return result;
         }
 
+        public Korisnik Get(int id)
+        {
+            var result = _dbcontext.Korisnik.Where(korisnik => korisnik.Id == id).FirstOrDefault();
+
+            return result;
+        }
+
+        public List<Korisnik> GetDostavljaci()
+        {
+            return _dbcontext.Korisnik.Where(k => k.Verifikovan == Zahtev.PROCESIRA_SE && k.TipKorisnika == Tip.DOSTAVLJAC).ToList();
+        }
+
+        public List<Korisnik> GetDostavljaciPrihvaceni()
+        {
+            return _dbcontext.Korisnik.Where(k => k.Verifikovan == Zahtev.PRIHVACEN && k.TipKorisnika == Tip.DOSTAVLJAC).ToList();
+        }
+
+        public Zahtev VratiZahtev(int id)
+        {
+            var result = _dbcontext.Korisnik.Where(korisnik => korisnik.Id == id).FirstOrDefault();
+
+            return result.Verifikovan;
+        }
+
         public void UpdateKorisnik(Korisnik korisnik, string property, string value)
         {
             var result = _dbcontext.Korisnik.Where(k => k.Id == korisnik.Id).FirstOrDefault();
 
-            result.GetType().GetProperty(property).SetValue(result, value);
-
+            if(property == "Verifikovan")
+            {
+                Enum.TryParse(value, out Zahtev zahtev);
+                result.GetType().GetProperty(property).SetValue(result, zahtev);
+            }
+            else
+            {
+                result.GetType().GetProperty(property).SetValue(result, value);
+            }
+            
             _dbcontext.SaveChanges();
         }
     }

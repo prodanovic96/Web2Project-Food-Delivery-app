@@ -6,6 +6,13 @@
     <title>@ViewData["Title"] - Web2Project</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
+    <script>
+        function Nesto() {
+            myIFrame.location = 'https://www.google.com/accounts/Logout';
+            //return window.location.href = "/Authentication/LogOutGoogle";
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -20,13 +27,52 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (ViewBag.korisnik.LogedIn)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="MojNalog" asp-action="Index">Moj Nalog</a>
-                            </li>
+                            @if (ViewBag.korisnik.Verifikovan == Zahtev.PRIHVACEN)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark col-sm-2" asp-area="" asp-controller="MojNalog" asp-action="Index">Moj Nalog</a>
+                                </li>
+                            }
+                            @if (ViewBag.korisnik.TipKorisnika == Tip.ADMINISTRATOR)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="DodajProizvod">Dodaj proizvod</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="DodajKategoriju">Dodaj kategoriju</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="Verifikuj">Verifikuj dostavljace</a>
+                                </li>
+                            }
+                            else if (ViewBag.korisnik.TipKorisnika == Tip.DOSTAVLJAC)
+                            {
+                                if (ViewBag.korisnik.Verifikovan == Zahtev.PRIHVACEN)
+                                {
+                                    <li class="nav-item">Nove porudzbine</li>
+                                    <li class="nav-item">Moje porudzbine</li>
+                                    <li class="nav-item">Trenutna porudzbina</li>
+                                }
+                            }
+                            else
+                            {
 
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
-                            </li>
+                            }
+                            if (ViewBag.korisnik.Google)
+                            {   
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark col-sm-4" href="#" temp_href="#" id="logoutText" target='myIFrame' onclick="Nesto(); return false;">Odjavi se sa Google</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="LogOutGoogle">Refresh</a>
+                                    <iframe name='myIFrame' id="myIFrame" style='display:none'></iframe>                   
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
+                                </li>
+                            }
+
                         }
                     </ul>
                 </div>

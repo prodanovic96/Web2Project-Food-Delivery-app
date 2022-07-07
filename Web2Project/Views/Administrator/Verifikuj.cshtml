@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Verifikuj dostavljace</title>
+    </head>
+    <body>
+        @if (ViewBag.dostavljaci.Count != 0) 
+        {
+            <h2 class="text-info">Dostavljaci u sistemu</h2>
+            <table class="table table-striped" border="1">
+                <thead class="thead-light">
+                    <tr bgcolor="lightgrey">
+                        <td align="center"><strong>Korisnicko ime</strong></td>
+                        <td align="center"><strong>Ime i prezime</strong></td>
+                        <td align="center"><strong>Email</strong></td>
+                        <td align="center"><strong>Status</strong></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var d in ViewBag.dostavljaci) 
+                    {
+                        <tr>
+                            <td align="center">@d.KorisnickoIme</td>
+                            <td align="center">@d.Ime  @d.Prezime</td>
+                            <td align="center">@d.Email</td>
+                            <td align="center">@d.Verifikovan.ToString()</td>
+                            <td align="center">
+                                <form method="post" action="~/Administrator/Odobren?id=@d.Id">
+                                    <input  class="btn btn-success" type="submit" value="Odobri"/>
+                                </form>
+                            </td>
+                            <td align="center">
+                                <form method="post" action="~/Administrator/Odbijen?id=@d.Id">
+                                    <input class="btn btn-danger" type="submit" value="Odbij" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <label>U sistemu ne postoje dostavljaci koji cekaju na potvrdu</label>
+        }
+    </body>
+</html>

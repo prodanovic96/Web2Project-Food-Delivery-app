@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Web2Project.Models
+﻿namespace Web2Project.Models
 {
     public class Porudzbina
     {

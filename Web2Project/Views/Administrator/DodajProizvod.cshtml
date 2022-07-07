@@ -1,0 +1,63 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Dodaj proizvod</title>
+    </head>
+    <body>
+        <h2>Dodajte novi proizvod:</h2>
+        <br />
+        <form method="post" action="~/Administrator/ProizvodDodat">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-sm-2">Ime:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" placeholder="Unesite ime proizvoda" maxlength="30" id="Naziv" name="Naziv" onchange="NazivEmpty()" />
+                    </div>
+                    <label class="col-sm-4" id="Status1"></label>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Cena:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="number" placeholder="Unesite cenu proizvoda" min="1" id="Cena" name="Cena" onchange="CenaEmpty()" />
+                    </div>
+                    <label class="col-sm-4" id="Status2"></label>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Sastojci:</label>
+                    <div class="col-sm-3">
+                        <textarea class="form-control" name="Sastojci" id="Sastojci" style="font-family:sans-serif;font-size:1.2em;"></textarea>
+                    </div>
+                    <label class="col-sm-4" id="Status3"></label>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Kategorija:</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="KategorijaId" id="KategorijaId">
+                            @foreach (var k in @ViewBag.kategorije)
+                            {
+                                <option value="@k.Id">@k.Naziv</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-4">
+                        <input class="btn btn-primary" type="submit" value="Dodaj" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>

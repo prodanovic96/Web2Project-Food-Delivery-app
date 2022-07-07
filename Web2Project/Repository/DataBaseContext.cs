@@ -10,8 +10,10 @@ namespace Web2Project.Repository
         }
 
         public DbSet<Korisnik> Korisnik { get; set; }
+        public DbSet<Proizvod> Proizvod { get; set; }
+        public DbSet<Kategorija> Kategorija { get; set; }
         //public DbSet<Porudzbina> Porudzbina { get; set; }
-        //public DbSet<Proizvod> Proizvod { get; set; }
+
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
@@ -37,9 +39,9 @@ namespace Web2Project.Repository
         //    //          .WithMany(p => p.Porudzbine)
         //    //          .HasForeignKey(d => d.PotrosacId);
 
-                
+
         //    //});
-                
+
 
         //    //modelBuilder.Entity<Proizvod>(entity =>
         //    //{
@@ -53,7 +55,7 @@ namespace Web2Project.Repository
         //    //{
         //    //    entity.ToTable("Proizvod_Korpa");
         //    //    entity.HasKey(e => e.Id);
-                 
+
         //    //});
         //}
     }

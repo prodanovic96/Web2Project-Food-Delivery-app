@@ -16,11 +16,14 @@ namespace Web2Project.Models
         public Tip TipKorisnika { get; set; }
         public Zahtev Verifikovan { get; set; }
         public bool LogedIn { get; set; }
+        public string ImagePath { get; set; }
+        public bool Google { get; set; }
         //public virtual ICollection<Porudzbina> Porudzbine { get; set; }
 
         public Korisnik()
         {
             LogedIn = false;
+            Google = false;
         }
 
         public void LogIn()

@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Web2Project.Helper;
 using Web2Project.Models;
 
@@ -52,6 +58,9 @@ namespace Web2Project.Controllers
                     }
                     else if (korisnik.TipKorisnika == Tip.DOSTAVLJAC)
                     {
+                        korisnik.Verifikovan = _userRepository.VratiZahtev(korisnik.Id);
+                        HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+
                         return RedirectToAction("Index", "Dostavljac");
                     }
                     else
@@ -122,10 +131,65 @@ namespace Web2Project.Controllers
             Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
 
             korisnik.LogOut();
+            HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(null));
+            return RedirectToAction("Index", "Authentication");
+        }
+
+        public async Task LogInGoogle()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            });
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var claims = result.Principal.Identities
+                .FirstOrDefault().Claims.Select(claim => new
+                {
+                    claim.Issuer,
+                    claim.OriginalIssuer,
+                    claim.Type,
+                    claim.Value
+                });
+
+            string korisnickoIme = claims.FirstOrDefault().Value;
+
+            Korisnik korisnik = _userRepository.Get(korisnickoIme);
+
+            if (korisnik == null)
+            {
+                korisnik = new Korisnik();
+                korisnik.KorisnickoIme = korisnickoIme;
+                korisnik.Ime = claims.Where(e => e.Type.Contains("givenname")).FirstOrDefault().Value;
+                korisnik.Prezime = claims.Where(e => e.Type.Contains("surname")).FirstOrDefault().Value;
+                korisnik.Email = claims.Where(e => e.Type.Contains("emailaddress")).FirstOrDefault().Value;
+                korisnik.TipKorisnika = Tip.POTROSAC;
+                korisnik.Verifikovan = Zahtev.PRIHVACEN;
+                korisnik.ImagePath = claims.Where(e => e.Type.Contains("picture")).FirstOrDefault().Value;
+                korisnik.Google = true;
+
+                // Saznaj pol, adresu i datum rodjenja
+
+                _userRepository.Add(korisnik);
+            }
+
+            korisnik.LogedIn = true;
+
+            HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+
+            return RedirectToAction("Index", "Potrosac");
+        }
+
+        public async Task<IActionResult> LogOutGoogle()
+        {
 
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(null));
 
-            return RedirectToAction("Index", "Authentication");
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
         }
     }
 }
