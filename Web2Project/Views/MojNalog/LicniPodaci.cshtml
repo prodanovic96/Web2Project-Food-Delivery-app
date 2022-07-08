@@ -10,9 +10,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Licni Podaci</title>
-
     <script>
-
         var username = true;
 
         function UserCheck() {
@@ -36,6 +34,24 @@
             }
         }
 
+        function vratiDatum() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("DatumRodjenja").setAttribute("max", today);
+        }
+
         function validateForm() {
             return username;
         }
@@ -49,7 +65,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="javascript:vratiDatum()">
     <br /><br />
     <table>
         <tr>
@@ -57,7 +73,11 @@
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             <td><strong>Trenutno ime i prezime</strong></td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td><strong>Trenutna adresa</strong></td>
+            <td align="center"><strong>Trenutna adresa</strong></td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td align="center"><strong>Datum rodjenja</strong></td>
+            <td><div class="col-sm-4"></div></td>
+            <td rowspan="2"><img src="@ViewBag.korisnik.ImagePath" height="100" width="100" asp-append-version="true" /></td>
         </tr>
         <tr>
             <td align="center">@ViewBag.korisnik.KorisnickoIme</td>
@@ -65,42 +85,84 @@
             <td align="center">@ViewBag.korisnik.Ime  @ViewBag.korisnik.Prezime</td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             <td align="center">@ViewBag.korisnik.Adresa</td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td align="center">@ViewBag.korisnik.DatumRodjenja.ToString("dd/MM/yyyy")</td>
         </tr>
     </table>
     <br /><br />
 
-    <form method="post" action="~/MojNalog/LicniPodaciPromenjeni" onsubmit="return validateForm()">
-        <div class="form-group">
-            <div class="row">
-                <label class="control-label col-sm-2">Novo korisnicko ime</label>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Unesite novo korisnicko ime" maxlength="30" id="KorisnickoIme" name="korisnickoime" onchange="UserCheck()" />
+    @if (!ViewBag.korisnik.Google) 
+    {
+        <form method="post" action="~/MojNalog/LicniPodaciPromenjeni" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-sm-2">Novo korisnicko ime</label>
                 </div>
-                <label class="control-label col-sm-4" id="Status1"></label>
-            </div>
-            <br />
-            <div class="row">
-                <label class="control-label col-sm-2">Novo ime</label>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Unesite novo ime" maxlength="20" name="ime" />
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" placeholder="Unesite novo korisnicko ime" maxlength="30" id="KorisnickoIme" name="korisnickoime" onchange="UserCheck()" />
+                    </div>
+                    <label class="control-label col-sm-4" id="Status1"></label>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Novo ime</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" placeholder="Unesite novo ime" maxlength="20" name="ime" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Novo prezime</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" placeholder="Unesite novo prezime" maxlength="30" name="prezime" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Nova adresa</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="form-control" type="text" placeholder="Unesite novu adresu" maxlength="70" name="adresa" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-3">Promeni datum rodjenja</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="form-control" type="date" id="DatumRodjenja" name="DatumRodjenja" min='1899-01-01' />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <label class="control-label col-sm-2">Nova slika</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="file" name="ifile" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
+                    </div>
                 </div>
             </div>
-            <br />
+        </form>
+     }
+     else 
+     { 
+        <form method="post" action="~/MojNalog/LicniPodaciPromenjeni">
             <div class="row">
-                <label class="control-label col-sm-2">Novo prezime</label>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Unesite novo prezime" maxlength="30" name="prezime" />
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <label class="control-label col-sm-2">Nova adresa</label>
+                    <label class="control-label col-sm-2">Nova adresa</label>
             </div>
             <div class="row">
                 <div class="col-sm-3">
@@ -108,12 +170,21 @@
                 </div>
             </div>
             <br />
-            <div class="row">
-                <div class="col-sm-3">
-                    <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
+                <div class="row">
+                    <label class="control-label col-sm-3">Promeni datum rodjenja</label>
                 </div>
-            </div>
-        </div>
-    </form>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input class="form-control" type="date" id="DatumRodjenja" name="DatumRodjenja" min='1899-01-01' />
+                    </div>
+                </div>
+            <br />
+            <div class="row">
+                    <div class="col-sm-3">
+                        <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
+                    </div>
+                </div>
+        </form>
+     }
 </body>
 </html>

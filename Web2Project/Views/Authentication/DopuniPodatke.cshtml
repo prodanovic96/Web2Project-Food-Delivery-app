@@ -1,0 +1,103 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dovrsi registraciju</title>
+    <script>
+            function AdresaEmpty() {
+                if ($("#Adresa").val() == "") {
+                    $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                    $("#Adresa").css("border-color", "Red");
+                } else {
+                    $("#Status1").html('');
+                    $("#Adresa").css("border-color", "lightgray");
+                }
+            }
+
+            function vratiDatum() {
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1;
+                var yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+
+                today = yyyy + '-' + mm + '-' + dd;
+                document.getElementById("DatumRodjenja").setAttribute("max", today);
+            }
+
+            function validateForm() {
+                var dobro = true;
+                if ($("#Adresa").val() == "") {
+                    $("#Status1").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                    $("#Adresa").css("border-color", "Red");
+                    dobro = false;
+                }else {
+                    $("#Status1").html('');
+                    $("#Adresa").css("border-color", "lightgray");
+                }
+                if ($("#DatumRodjenja").val() == "") {
+                    $("#Status2").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                    $("#DatumRodjenja").css("border-color", "Red");
+                    dobro = false;
+                }else {
+                    $("#Status2").html('');
+                    $("#DatumRodjenja").css("border-color", "lightgray");
+                }
+                return dobro;
+            }
+    </script>
+    <style>
+        p.tekstic {
+            color: grey;
+        }
+    </style>
+</head>
+<body onload="javascript:vratiDatum()">
+    <h2>Dovrsite registraciju</h2>
+    <br />
+    <form method="post" action="~/Authentication/PodaciDopunjeni" onsubmit="return validateForm()">
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-sm-2">Unesite adresu:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" onchange="AdresaEmpty()" placeholder="Unesite adresu stanovnja" maxlength="70" id="Adresa" name="Adresa" />
+                </div>
+                <label class="col-sm-4" id="Status1"></label>
+            </div>
+            <div class="row">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-4">
+                    <p class="tekstic"><i>U formatu adresa i broj, grad, postanski broj</i></p>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Datum rodjenja:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="date" id="DatumRodjenja" min='1899-01-01' name="DatumRodjenja" />
+                </div>
+                <label class="col-sm-4" id="Status2"></label>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-4">
+                    <input class="btn btn-primary" type="submit" value="Dovrsi registraciju" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

@@ -134,17 +134,18 @@ namespace Web2Project.Controllers
 
                 if (ifile != null)
                 {
-                    imagePath = _fileUploadService.UploadFile(ifile, korisnik.Id.ToString());
+                    _fileUploadService.UploadFile(ifile, korisnik.Id.ToString());
+                    imagePath = "~/Images/" + korisnik.Id + ".jpg";
                 }
                 else
                 {
-                    imagePath = _fileUploadService.ReturnUnknownUser();
+                    imagePath = "~/Images/unknown.jpg";
                 }
 
                 _userRepository.UpdateKorisnik(korisnik, "ImagePath", imagePath);
 
                 HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Korisnik uspesno registrovan!"));
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Authentication");
             }
             else
             {

@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Web2Project.Helper
 {
@@ -17,19 +16,22 @@ namespace Web2Project.Helper
             this.iwebhost = iwebhost;
         }
 
-        public string ReturnUnknownUser()
+        public async Task<string> UploadFile(IFormFile ifile, string Id)
         {
-            var saveimg = Path.Combine(iwebhost.WebRootPath, "Images" + "web2.jpg");
-            return saveimg;
-        }
+            string imgext = Path.GetExtension(ifile.FileName).ToLower();
+            string saveimg;
 
-        public string UploadFile(IFormFile ifile, string Id)
-        {
-            string ext = Path.GetExtension(ifile.FileName).ToLower();
+            if (imgext == ".png")
+            {
+                saveimg = Path.Combine(iwebhost.WebRootPath, "Images", Id + ".jpg");
+            }
+            else
+            {
+                saveimg = Path.Combine(iwebhost.WebRootPath, "Images", Id + imgext);
+            }
 
-            var saveimg = Path.Combine(iwebhost.WebRootPath, "Images", Id + ext);
             var stream = new FileStream(saveimg, FileMode.Create);
-            ifile.CopyToAsync(stream);
+            await ifile.CopyToAsync(stream);
 
             return saveimg;
         }

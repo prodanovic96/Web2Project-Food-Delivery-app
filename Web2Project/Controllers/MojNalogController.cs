@@ -14,10 +14,12 @@ namespace Web2Project.Controllers
     public class MojNalogController : Controller
     {
         IUserRepository _userRepository;
+        IFileUploadService _fileUploadService;
 
-        public MojNalogController(IUserRepository userRepository)
+        public MojNalogController(IUserRepository userRepository, IFileUploadService fileUploadService)
         {
             _userRepository = userRepository;
+            _fileUploadService = fileUploadService;
         }
 
         public IActionResult Index()
@@ -41,13 +43,15 @@ namespace Web2Project.Controllers
         }
 
         [HttpPost]
-        public ActionResult LicniPodaciPromenjeni(string korisnickoime, string ime, string prezime, string adresa)
+        public ActionResult LicniPodaciPromenjeni(string korisnickoime, string ime, string prezime, string adresa, IFormFile ifile, DateTime DatumRodjenja)
         {
             Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
 
+            
+
             bool flag = false;
 
-            if (korisnickoime != "" || ime != "" || prezime != "" || adresa != "")
+            if (korisnickoime != "" || ime != "" || prezime != "" || adresa != "" || ifile !=null || !DatumRodjenja.ToString().Contains("01-Jan-01"))
             {
                 if (ime != null && ime != "" && ime != korisnik.Ime)
                 {
@@ -69,6 +73,25 @@ namespace Web2Project.Controllers
                     flag = true;
 
                     _userRepository.UpdateKorisnik(korisnik, "Adresa", adresa);
+                }
+                if(ifile != null)
+                {
+                    flag = true;
+                    _fileUploadService.UploadFile(ifile, korisnik.Id.ToString());
+
+                    if (korisnik.ImagePath.Contains("unknown.jpg"))
+                    {
+                        korisnik.ImagePath = "~/Images/" + korisnik.Id + ".jpg";
+                        _userRepository.UpdateKorisnik(korisnik, "ImagePath", korisnik.ImagePath);
+                    }
+                    
+                }
+                if (!DatumRodjenja.ToString().Contains("01-Jan-01"))
+                {
+                    flag = true;
+                    korisnik.DatumRodjenja = DatumRodjenja;
+
+                    _userRepository.UpdateKorisnik(korisnik, "DatumRodjenja", korisnik.DatumRodjenja.ToString());
                 }
 
                 if (korisnickoime != null && korisnickoime != "" && korisnickoime != korisnik.KorisnickoIme)

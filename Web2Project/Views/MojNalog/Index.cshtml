@@ -11,17 +11,26 @@
         <title>Moj Nalog</title>
     </head>
     <body>
-        <h2>Licni podaci</h2>
-
+        <div class="row">
+            <div class="col-sm-3">
+                <h2>Licni podaci</h2>
+            </div>
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+                <img src="@ViewBag.korisnik.ImagePath" height="100" width="100" asp-append-version="true" />
+            </div>
+        </div>
         <br />
-
         <h4><a href="~/MojNalog/LicniPodaci">Promena licnih podataka</a></h4>
         <h5>@ViewBag.korisnik.KorisnickoIme, @ViewBag.korisnik.Ime @ViewBag.korisnik.Prezime, @ViewBag.korisnik.Adresa</h5> <br />
 
-        <h4><a href="~/MojNalog/Lozinka">Promena lozinke</a></h4> <br />
+        @if (!ViewBag.korisnik.Google)
+        {
+            <h4><a href="~/MojNalog/Lozinka">Promena lozinke</a></h4> <br />
 
-        <h4><a href="~/MojNalog/Email">Promena E-mail adrese</a></h4>
-        <h5>@ViewBag.korisnik.Email</h5>
+            <h4><a href="~/MojNalog/Email">Promena E-mail adrese</a></h4>
+            <h5>@ViewBag.korisnik.Email</h5>
 
+        }
     </body>
 </html>

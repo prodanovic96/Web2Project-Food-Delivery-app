@@ -53,6 +53,11 @@ namespace Web2Project.Helper
             return _dbcontext.Korisnik.Where(k => k.Verifikovan == Zahtev.PRIHVACEN && k.TipKorisnika == Tip.DOSTAVLJAC).ToList();
         }
 
+        public Korisnik GetKorisnikWithSameEmail(string email)
+        {
+            return _dbcontext.Korisnik.Where(k => k.Email == email).FirstOrDefault();
+        }
+
         public Zahtev VratiZahtev(int id)
         {
             var result = _dbcontext.Korisnik.Where(korisnik => korisnik.Id == id).FirstOrDefault();
@@ -68,6 +73,10 @@ namespace Web2Project.Helper
             {
                 Enum.TryParse(value, out Zahtev zahtev);
                 result.GetType().GetProperty(property).SetValue(result, zahtev);
+            }else if (property == "DatumRodjenja")
+            {
+                DateTime.TryParse(value, out DateTime datum);
+                result.GetType().GetProperty(property).SetValue(result, datum);
             }
             else
             {

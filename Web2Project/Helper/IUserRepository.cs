@@ -16,7 +16,7 @@ namespace Web2Project.Helper
         void UpdateKorisnik(Korisnik korisnik, string property, string value);
         List<Korisnik> GetDostavljaci();
         List<Korisnik> GetDostavljaciPrihvaceni();
-
+        Korisnik GetKorisnikWithSameEmail(string email);
         Zahtev VratiZahtev(int id);
     }
 }

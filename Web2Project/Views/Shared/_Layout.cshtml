@@ -58,21 +58,10 @@
                             {
 
                             }
-                            if (ViewBag.korisnik.Google)
-                            {   
-                                <li class="nav-item">
-                                    @*<a class="nav-link text-dark" href="#" temp_href="#" id="logoutText" target='myIFrame' onclick="myIFrame.location = 'https://www.google.com/accounts/Logout'; return false;">Odjavi se</a>
-                                    <iframe name='myIFrame' id="myIFrame" style='display:none'></iframe>*@
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="LogOutGoogle">Odjavi se</a>                                                      
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
-                                </li>
-                            }
-
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
+                            </li>
                         }
                     </ul>
                 </div>
