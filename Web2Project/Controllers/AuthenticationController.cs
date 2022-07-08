@@ -169,9 +169,8 @@ namespace Web2Project.Controllers
                 korisnik.TipKorisnika = Tip.POTROSAC;
                 korisnik.Verifikovan = Zahtev.PRIHVACEN;
                 korisnik.ImagePath = claims.Where(e => e.Type.Contains("picture")).FirstOrDefault().Value;
-                korisnik.Google = true;
 
-                // Saznaj pol, adresu i datum rodjenja
+                // Saznaj adresu i datum rodjenja
 
                 _userRepository.Add(korisnik);
             }
@@ -185,7 +184,6 @@ namespace Web2Project.Controllers
 
         public async Task<IActionResult> LogOutGoogle()
         {
-
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(null));
 
             await HttpContext.SignOutAsync();

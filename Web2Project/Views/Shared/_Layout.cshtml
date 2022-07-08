@@ -9,7 +9,7 @@
 
     <script>
         function Nesto() {
-            myIFrame.location = 'https://www.google.com/accounts/Logout';
+            
             //return window.location.href = "/Authentication/LogOutGoogle";
         }
     </script>
@@ -30,7 +30,7 @@
                             @if (ViewBag.korisnik.Verifikovan == Zahtev.PRIHVACEN)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark col-sm-2" asp-area="" asp-controller="MojNalog" asp-action="Index">Moj Nalog</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="MojNalog" asp-action="Index">Moj Nalog</a>
                                 </li>
                             }
                             @if (ViewBag.korisnik.TipKorisnika == Tip.ADMINISTRATOR)
@@ -61,9 +61,9 @@
                             if (ViewBag.korisnik.Google)
                             {   
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark col-sm-4" href="#" temp_href="#" id="logoutText" target='myIFrame' onclick="Nesto(); return false;">Odjavi se sa Google</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="LogOutGoogle">Refresh</a>
-                                    <iframe name='myIFrame' id="myIFrame" style='display:none'></iframe>                   
+                                    @*<a class="nav-link text-dark" href="#" temp_href="#" id="logoutText" target='myIFrame' onclick="myIFrame.location = 'https://www.google.com/accounts/Logout'; return false;">Odjavi se</a>
+                                    <iframe name='myIFrame' id="myIFrame" style='display:none'></iframe>*@
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="LogOutGoogle">Odjavi se</a>                                                      
                                 </li>
                             }
                             else

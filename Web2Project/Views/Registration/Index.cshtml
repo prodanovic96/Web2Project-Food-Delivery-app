@@ -224,7 +224,7 @@
 <body onload="javascript:vratiDatum()">
     <h2>Registrujte novog korisnika:</h2>
     <br />
-    <form method="post" action="~/Registration/Add" onsubmit="return validateForm()">
+    <form method="post" action="~/Registration/Add" enctype="multipart/form-data" onsubmit="return validateForm()">
         <div class="form-group">
             <div class="row">
                 <label class="control-label col-sm-2">Korisnicko ime:</label>
@@ -293,6 +293,14 @@
                     <input class="form-control" type="date" onchange="DatumEmpty()" id="DatumRodjenja" min='1899-01-01' name="DatumRodjenja" />
                 </div>
                 <label class="col-sm-4" id="Status8"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Slika:</label>
+                <div class="col-sm-3">
+                    <input type="file" name="ifile" />
+                </div>
+                <label class="col-sm-4" id="Status9"><font color="Red">@ViewBag.Message</font></label>
             </div>
             <br />
             <div class="row">

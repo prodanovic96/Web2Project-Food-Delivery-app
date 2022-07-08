@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Web2Project.Helper;
 using Web2Project.Models;
@@ -11,10 +12,13 @@ namespace Web2Project.Controllers
     public class RegistrationController : Controller
     {
         IUserRepository _userRepository;
+        IFileUploadService _fileUploadService;
 
-        public RegistrationController(IUserRepository userRepository)
+        public RegistrationController(IUserRepository userRepository, IFileUploadService fileUploadService)
         {
             _userRepository = userRepository;
+            _fileUploadService = fileUploadService;
+
         }
 
         public IActionResult Index()
@@ -47,6 +51,7 @@ namespace Web2Project.Controllers
             }
 
             ViewBag.korisnik = korisnik;
+            ViewBag.Message = "";
 
             return View();
         }
@@ -78,7 +83,7 @@ namespace Web2Project.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(Korisnik korisnik, string ponovoLozinka)
+        public ActionResult Add(Korisnik korisnik, string ponovoLozinka, IFormFile ifile)
         {
             if (korisnik.KorisnickoIme == null || korisnik.KorisnickoIme == "" || korisnik.Ime == null || korisnik.Ime == "" || korisnik.Prezime == null || korisnik.Prezime == "" || korisnik.Lozinka == null || korisnik.Lozinka == "" || korisnik.Email == null || korisnik.Email == "" || korisnik.DatumRodjenja > DateTime.Now)
             {
@@ -98,6 +103,17 @@ namespace Web2Project.Controllers
                 return RedirectToAction("Index");
             }
 
+            if(ifile != null)
+            {
+                string imgext = Path.GetExtension(ifile.FileName).ToLower();
+                if (imgext != ".jpg" && imgext != ".png")
+                {
+                    ViewBag.Message = "Slika mora biti u .jpg ili .png formatu!";
+                    ViewBag.korisnik = new Korisnik();
+                    return View("Index");
+                }
+            }
+
             bool isEmail = Regex.IsMatch(korisnik.Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
             if (isEmail)
             {
@@ -111,7 +127,21 @@ namespace Web2Project.Controllers
                 }
 
                 korisnik.Lozinka = Operations.hashPassword(korisnik.Lozinka);
+              
                 _userRepository.Add(korisnik);
+
+                string imagePath = "";
+
+                if (ifile != null)
+                {
+                    imagePath = _fileUploadService.UploadFile(ifile, korisnik.Id.ToString());
+                }
+                else
+                {
+                    imagePath = _fileUploadService.ReturnUnknownUser();
+                }
+
+                _userRepository.UpdateKorisnik(korisnik, "ImagePath", imagePath);
 
                 HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Korisnik uspesno registrovan!"));
                 return RedirectToAction("Index");
