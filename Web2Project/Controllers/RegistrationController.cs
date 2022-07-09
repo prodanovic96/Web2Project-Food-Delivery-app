@@ -85,6 +85,14 @@ namespace Web2Project.Controllers
         [HttpPost]
         public ActionResult Add(Korisnik korisnik, string ponovoLozinka, IFormFile ifile)
         {
+            //korisnik.Lozinka = Operations.hashPassword(korisnik.Lozinka);
+            //korisnik.Verifikovan = Zahtev.PRIHVACEN;
+            //korisnik.TipKorisnika = Tip.ADMINISTRATOR;
+            //korisnik.Google = false;
+            //korisnik.ImagePath = "~/Images/unknown.jpg";
+            //_userRepository.Add(korisnik);
+            //return RedirectToAction("Index");
+
             if (korisnik.KorisnickoIme == null || korisnik.KorisnickoIme == "" || korisnik.Ime == null || korisnik.Ime == "" || korisnik.Prezime == null || korisnik.Prezime == "" || korisnik.Lozinka == null || korisnik.Lozinka == "" || korisnik.Email == null || korisnik.Email == "" || korisnik.DatumRodjenja > DateTime.Now)
             {
                 HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Sva polja moraju biti popunjena"));

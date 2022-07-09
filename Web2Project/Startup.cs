@@ -10,6 +10,7 @@ using Web2Project.Repository;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Web2Project.Models;
 
 namespace Web2Project
 {
@@ -46,6 +47,13 @@ namespace Web2Project
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
             });
+
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();

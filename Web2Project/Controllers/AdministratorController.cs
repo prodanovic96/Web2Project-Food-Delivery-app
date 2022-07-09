@@ -15,12 +15,14 @@ namespace Web2Project.Controllers
         IProductRepository _productRepository;
         ICategoryRepository _categoryRepository;
         IUserRepository _userRepository;
+        IEmailSender _emailSender;
 
-        public AdministratorController(IProductRepository productRepository, ICategoryRepository categoryRepository, IUserRepository userRepository)
+        public AdministratorController(IProductRepository productRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IEmailSender emailSender)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -157,6 +159,10 @@ namespace Web2Project.Controllers
         [HttpPost]
         public IActionResult Odobren(int id)
         {
+            // Mejl bi trebao da bude poslat na korisnik.Email
+            Message message = new Message(new string[] { "markoprodanovic96@gmail.com" }, "[Web 2] - Projekat", "Vas profil je verifikovan, mozete poceti sa radom!");
+            _emailSender.SendEmail(message);
+
             Korisnik korisnik = _userRepository.Get(id);
             _userRepository.UpdateKorisnik(korisnik, "Verifikovan", Zahtev.PRIHVACEN.ToString());
 
@@ -166,6 +172,9 @@ namespace Web2Project.Controllers
         [HttpPost]
         public IActionResult Odbijen(int id)
         {
+            Message message = new Message(new string[] { "obojenigel@gmail.com" }, "[Web 2] - Projekat", "Vas profil je odbijen od strane administratora, ne mozete koristiti usluge naseg sistema!");
+            _emailSender.SendEmail(message);
+
             Korisnik korisnik = _userRepository.Get(id);
             _userRepository.UpdateKorisnik(korisnik, "Verifikovan", Zahtev.ODBIJEN.ToString());
 
