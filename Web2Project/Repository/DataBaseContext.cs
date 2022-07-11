@@ -15,6 +15,32 @@ namespace Web2Project.Repository
         //public DbSet<Porudzbina> Porudzbina { get; set; }
 
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Dodaj za svaku tabelu posebno da ne mogu imati null property-je i da im definises kljuc
+
+            // Definisemo tabelu Kategorija
+            modelBuilder.Entity<Kategorija>().HasKey(k => k.Id);
+            modelBuilder.Entity<Kategorija>().Property(k => k.Naziv).IsRequired();
+            modelBuilder.Entity<Kategorija>().HasIndex(k => k.Naziv).IsUnique();
+
+            // Definisemo tabelu Proizvod
+            modelBuilder.Entity<Proizvod>().HasKey(p => p.Id);
+            modelBuilder.Entity<Proizvod>().Property(p => p.Naziv).IsRequired();
+            modelBuilder.Entity<Proizvod>().HasIndex(p => p.Naziv).IsUnique();
+            modelBuilder.Entity<Proizvod>().Property(p => p.Sastojci).IsRequired();
+            modelBuilder.Entity<Proizvod>().Property(p => p.Cena).IsRequired();
+            modelBuilder.Entity<Proizvod>().Property(p => p.ImagePath).IsRequired();
+
+            modelBuilder.Entity<Proizvod>()
+                .HasOne<Kategorija>(p => p.Kategorija)
+                .WithMany(k => k.Proizvodi)
+                .HasForeignKey(p => p.KategorijaId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+        }
+
+
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    base.OnModelCreating(modelBuilder);

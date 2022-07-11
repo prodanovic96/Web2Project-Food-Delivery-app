@@ -11,6 +11,13 @@ namespace Web2Project.Helper
         void Add(Kategorija kategorija);
         Kategorija Get(int id);
 
+        bool Existing(string naziv);
+        bool Existing(int id);
+
         List<Kategorija> GetAll();
+
+        void DeleteCategory(int id);
+
+        void UpdateProperty(Kategorija kategorija, string value);
     }
 }

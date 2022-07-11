@@ -37,7 +37,7 @@
                         } else {
                             $("#Status1").html('<font color="Red">Kategorija sa ovim nazivom vec postoji!</font>');
                             $("#Naziv").css("border-color", "Red");
-                            username = false;  
+                            username = false;
                         }
                     });
             }
@@ -60,23 +60,21 @@
     </script>
 </head>
 <body>
-    <div class="col-6">
-        <h2 class="text-info">Dodajte novu kategoriju:</h2>
-    </div>
+    <h2>Dodajte novu kategoriju:</h2>
     <br />
-    <form method="post" action="~/Administrator/KategorijaDodata" onsubmit="return validateForm()">
+    <form method="post" action="~/Administrator/KategorijaIzmenjena?id=@ViewBag.Id" onsubmit="return validateForm()">
         <div class="form-group">
             <div class="row">
-                <label class="control-label col-sm-2">Naziv:</label>
+                <label class="control-label col-sm-2">Novi naziv:</label>
                 <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Unesite naziv kategorije" maxlength="30" id="Naziv" name="Naziv" onchange="NazivEmpty()" />
+                    <input class="form-control" type="text" placeholder="Unesite novi naziv kategorije" maxlength="30" id="Naziv" name="Naziv" onchange="NazivEmpty()" />
                 </div>
                 <label class="col-sm-4" id="Status1"></label>
-            </div>   
+            </div>
             <br />
             <div class="row">
                 <div class="col-sm-4">
-                    <input class="btn btn-primary" type="submit" value="Dodaj" />
+                    <input class="btn btn-primary" type="submit" value="Izmeni" />
                 </div>
             </div>
         </div>

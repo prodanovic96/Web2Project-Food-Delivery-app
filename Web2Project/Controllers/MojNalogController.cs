@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,6 +29,15 @@ namespace Web2Project.Controllers
             {
                 return RedirectToAction("Index", "Authentication");
             }
+            else
+            {
+                Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (korisnik == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+            }
 
             ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
             return View();
@@ -35,9 +45,22 @@ namespace Web2Project.Controllers
 
         public ActionResult LicniPodaci()
         {
-            Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+            else
+            {
+                Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (korisnik == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+            }
             
-            ViewBag.korisnik = korisnik;
+            ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            ViewBag.Message = "";
 
             return View();
         }
@@ -46,8 +69,6 @@ namespace Web2Project.Controllers
         public ActionResult LicniPodaciPromenjeni(string korisnickoime, string ime, string prezime, string adresa, IFormFile ifile, DateTime DatumRodjenja)
         {
             Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
-
-            
 
             bool flag = false;
 
@@ -76,15 +97,22 @@ namespace Web2Project.Controllers
                 }
                 if(ifile != null)
                 {
+                    string imgext = Path.GetExtension(ifile.FileName).ToLower();
+                    if (imgext != ".jpg" && imgext != ".png")
+                    {
+                        ViewBag.Message = "Slika mora biti u .jpg ili .png formatu!";
+                        ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+                        return View("LicniPodaci");
+                    }
+
                     flag = true;
-                    _fileUploadService.UploadFile(ifile, korisnik.Id.ToString());
+                    _fileUploadService.UploadFile(ifile, korisnik.Id.ToString(), "Korisnici");
 
                     if (korisnik.ImagePath.Contains("unknown.jpg"))
                     {
-                        korisnik.ImagePath = "~/Images/" + korisnik.Id + ".jpg";
+                        korisnik.ImagePath = "~/Korisnici/" + korisnik.Id + ".jpg";
                         _userRepository.UpdateKorisnik(korisnik, "ImagePath", korisnik.ImagePath);
                     }
-                    
                 }
                 if (!DatumRodjenja.ToString().Contains("01-Jan-01"))
                 {
@@ -126,9 +154,21 @@ namespace Web2Project.Controllers
 
         public ActionResult Email()
         {
-            Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+            else
+            {
+                Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (korisnik == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+            }
             
-            ViewBag.korisnik = korisnik;
+            ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
 
             return View();
         }
@@ -177,9 +217,21 @@ namespace Web2Project.Controllers
 
         public ActionResult Lozinka()
         {
-            Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+            else
+            {
+                Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
 
-            ViewBag.korisnik = korisnik;
+                if (korisnik == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+            }
+
+            ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik")); 
 
             return View();
         }

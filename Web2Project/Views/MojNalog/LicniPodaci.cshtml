@@ -67,28 +67,28 @@
 </head>
 <body onload="javascript:vratiDatum()">
     <br /><br />
-    <table>
-        <tr>
-            <td><strong>Trenutno korisnicko ime</strong></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td><strong>Trenutno ime i prezime</strong></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td align="center"><strong>Trenutna adresa</strong></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td align="center"><strong>Datum rodjenja</strong></td>
-            <td><div class="col-sm-4"></div></td>
-            <td rowspan="2"><img src="@ViewBag.korisnik.ImagePath" height="100" width="100" asp-append-version="true" /></td>
-        </tr>
-        <tr>
-            <td align="center">@ViewBag.korisnik.KorisnickoIme</td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td align="center">@ViewBag.korisnik.Ime  @ViewBag.korisnik.Prezime</td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td align="center">@ViewBag.korisnik.Adresa</td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td align="center">@ViewBag.korisnik.DatumRodjenja.ToString("dd/MM/yyyy")</td>
-        </tr>
-    </table>
+    <div class="col-12 border p-3">
+        <table class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr align="center">
+                    <th>Korisnicko ime</th>
+                    <th>Ime i prezime</th>
+                    <th>Adresa</th>
+                    <th>Datum rodjenja</th>
+                    <th></th>                  
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td align="center">@ViewBag.korisnik.KorisnickoIme</td>
+                    <td align="center">@ViewBag.korisnik.Ime  @ViewBag.korisnik.Prezime</td>
+                    <td align="center">@ViewBag.korisnik.Adresa</td>
+                    <td align="center">@ViewBag.korisnik.DatumRodjenja.ToString("dd/MM/yyyy")</td>
+                    <td rowspan="2"><img src="@ViewBag.korisnik.ImagePath" height="100" width="100" asp-append-version="true" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <br /><br />
 
     @if (!ViewBag.korisnik.Google) 
@@ -147,6 +147,9 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <input type="file" name="ifile" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label><font color="Red">@ViewBag.Message</font></label>
                     </div>
                 </div>
                 <br />

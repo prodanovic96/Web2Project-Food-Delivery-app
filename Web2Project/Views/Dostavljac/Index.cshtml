@@ -8,14 +8,14 @@
 
 @if (ViewBag.korisnik.Verifikovan == Zahtev.PROCESIRA_SE)
 {
-    <label> Vas nalog se jos uvek procesuira </label >
+    <label> Vas nalog se jos uvek procesuira, administrator ce obraditi vas zahtev u najkracem mogucem roku! </label >
 }
 else if (ViewBag.korisnik.Verifikovan == Zahtev.PRIHVACEN)
 {
-    <label>@ViewBag.korisnik.KorisnickoIme uspesno ulogovan </label>
-    <label>Vas nalog je prihvacen</label>
+    <label>@ViewBag.korisnik.KorisnickoIme uspesno ulogovan! </label>
+    <label>Vas profil je verifikovan, mozete poceti sa radom!</label>
 }
 else
 {
-    <label>Vas nalog je odbijen</label>
+    <label><font color="Red">Vas nalog je odbijen od strane administratora, ne mozete koristiti usluge naseg sistema!</font></label>
 }

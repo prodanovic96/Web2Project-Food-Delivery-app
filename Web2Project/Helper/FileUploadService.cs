@@ -16,18 +16,18 @@ namespace Web2Project.Helper
             this.iwebhost = iwebhost;
         }
 
-        public async Task<string> UploadFile(IFormFile ifile, string Id)
+        public async Task<string> UploadFile(IFormFile ifile, string Id, string folderName)
         {
             string imgext = Path.GetExtension(ifile.FileName).ToLower();
             string saveimg;
 
             if (imgext == ".png")
             {
-                saveimg = Path.Combine(iwebhost.WebRootPath, "Images", Id + ".jpg");
+                saveimg = Path.Combine(iwebhost.WebRootPath, folderName, Id + ".jpg");
             }
             else
             {
-                saveimg = Path.Combine(iwebhost.WebRootPath, "Images", Id + imgext);
+                saveimg = Path.Combine(iwebhost.WebRootPath, folderName, Id + imgext);
             }
 
             var stream = new FileStream(saveimg, FileMode.Create);

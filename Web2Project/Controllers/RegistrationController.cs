@@ -13,11 +13,13 @@ namespace Web2Project.Controllers
     {
         IUserRepository _userRepository;
         IFileUploadService _fileUploadService;
+        IEmailSender _emailSender;
 
-        public RegistrationController(IUserRepository userRepository, IFileUploadService fileUploadService)
+        public RegistrationController(IUserRepository userRepository, IFileUploadService fileUploadService, IEmailSender emailSender)
         {
             _userRepository = userRepository;
             _fileUploadService = fileUploadService;
+            _emailSender = emailSender;
 
         }
 
@@ -132,6 +134,9 @@ namespace Web2Project.Controllers
                 else
                 {
                     korisnik.Verifikovan = Zahtev.PROCESIRA_SE;
+
+                    Message message = new Message(new string[] { "markoprodanovic96@gmail.com" }, "[Web 2] - Projekat", "Vas nalog se procesuira, administrator ce obraditi vas zahtev u najkracem mogucem roku!");
+                    _emailSender.SendEmail(message);
                 }
 
                 korisnik.Lozinka = Operations.hashPassword(korisnik.Lozinka);
@@ -142,12 +147,12 @@ namespace Web2Project.Controllers
 
                 if (ifile != null)
                 {
-                    _fileUploadService.UploadFile(ifile, korisnik.Id.ToString());
-                    imagePath = "~/Images/" + korisnik.Id + ".jpg";
+                    _fileUploadService.UploadFile(ifile, korisnik.Id.ToString(), "Korisnici");
+                    imagePath = "~/Korisnici/" + korisnik.Id + ".jpg";
                 }
                 else
                 {
-                    imagePath = "~/Images/unknown.jpg";
+                    imagePath = "~/Korisnici/unknown.jpg";
                 }
 
                 _userRepository.UpdateKorisnik(korisnik, "ImagePath", imagePath);

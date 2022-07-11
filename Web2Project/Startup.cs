@@ -55,6 +55,8 @@ namespace Web2Project
             services.AddSingleton(emailConfig);
             services.AddScoped<IEmailSender, EmailSender>();
 
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

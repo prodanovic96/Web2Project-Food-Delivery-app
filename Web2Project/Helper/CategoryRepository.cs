@@ -29,9 +29,37 @@ namespace Web2Project.Helper
             return kategorija;
         }
 
+        public bool Existing(string naziv)
+        {
+            var result = _dbcontext.Kategorija.Any(kategorija => kategorija.Naziv == naziv);
+
+            return result;
+        }
+
         public List<Kategorija> GetAll()
         {
             return _dbcontext.Kategorija.ToList();
+        }
+
+        public bool Existing(int id)
+        {
+            var result = _dbcontext.Kategorija.Any(kategorija => kategorija.Id == id);
+
+            return result;
+        }
+
+        public void DeleteCategory(int id)
+        {
+            _dbcontext.Remove(_dbcontext.Kategorija.Single(k => k.Id == id));
+            _dbcontext.SaveChanges();
+        }
+
+        public void UpdateProperty(Kategorija kategorija, string value)
+        {
+            var result = _dbcontext.Kategorija.Where(k => k.Id == kategorija.Id).FirstOrDefault();
+            result.Naziv = value;
+
+            _dbcontext.SaveChanges();
         }
     }
 }

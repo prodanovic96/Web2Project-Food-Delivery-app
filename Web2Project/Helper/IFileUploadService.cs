@@ -5,6 +5,6 @@ namespace Web2Project.Helper
 {
     public interface IFileUploadService
     {
-        Task<string> UploadFile(IFormFile ifile, string Id);
+        Task<string> UploadFile(IFormFile ifile, string Id, string folderName);
     }
 }

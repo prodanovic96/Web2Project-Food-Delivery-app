@@ -80,14 +80,18 @@
 </head>
 <body>
     <br /><br />
-    <table>
-        <tr>
-            <td><strong>Trenutna e-mail adresa</strong></td>
-        </tr>
-        <tr>
-            <td align="center">@ViewBag.korisnik.Email</td>
-        </tr>
-    </table>
+    <div class="col-3 border p-3">
+        <table class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr align="center">
+                    <th>Trenutna e-mail adresa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td align="center">@ViewBag.korisnik.Email</td></tr>
+            </tbody>
+        </table>
+    </div>
     <br /><br />
     <form method="post" action="~/MojNalog/EmailPromenjen" onsubmit="return validateForm()">
         <div class="form-group">

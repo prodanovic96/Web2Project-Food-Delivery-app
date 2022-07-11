@@ -6,10 +6,13 @@
     <title>@ViewData["Title"] - Web2Project</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 
     <script>
         function Nesto() {
-            
+
             //return window.location.href = "/Authentication/LogOutGoogle";
         }
     </script>
@@ -18,7 +21,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Authentication" asp-action="Index">Web2Project</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Authentication" asp-action="Index">Home</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,17 +35,24 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="MojNalog" asp-action="Index">Moj Nalog</a>
                                 </li>
+
                             }
                             @if (ViewBag.korisnik.TipKorisnika == Tip.ADMINISTRATOR)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="DodajProizvod">Dodaj proizvod</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="Proizvodi">Proizvodi</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="DodajKategoriju">Dodaj kategoriju</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="Kategorije">Kategorije</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="Verifikuj">Verifikuj dostavljace</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Administrator" asp-action="Porudzbine">Sve porudzbine</a>
+                                </li>
+                                <li class="nav-item offset-4">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
                                 </li>
                             }
                             else if (ViewBag.korisnik.TipKorisnika == Tip.DOSTAVLJAC)
@@ -52,16 +62,23 @@
                                     <li class="nav-item">Nove porudzbine</li>
                                     <li class="nav-item">Moje porudzbine</li>
                                     <li class="nav-item">Trenutna porudzbina</li>
+                                    <li class="nav-item offset-4">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item offset-4">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
+                                    </li>
                                 }
                             }
                             else
                             {
-
+                                <li class="nav-item offset-4">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
+                                </li>
                             }
-                            
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Odjavi se</a>
-                            </li>
                         }
                     </ul>
                 </div>
@@ -75,13 +92,16 @@
     </div>
 
     @*<footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Web2Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>*@
+            <div class="container">
+                &copy; 2022 - Web2Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

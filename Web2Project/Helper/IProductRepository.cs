@@ -10,5 +10,12 @@ namespace Web2Project.Helper
     {
         void Add(Proizvod proizvod);
         Proizvod Get(int id);
+        bool Existing(string naziv);
+        bool Existing(int id);
+        void UpdateProperty(Proizvod proizvod, string property, string value);
+        void UpdateProperty(Proizvod proizvod, string property, float value);
+        void UpdateProperty(Proizvod proizvod, string property, int value);
+        List<Proizvod> GetAllProduct();
+        void DeleteProduct(int id);
     }
 }

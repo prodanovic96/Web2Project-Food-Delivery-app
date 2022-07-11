@@ -6,58 +6,148 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Dodaj proizvod</title>
-    </head>
-    <body>
-        <h2>Dodajte novi proizvod:</h2>
-        <br />
-        <form method="post" action="~/Administrator/ProizvodDodat">
-            <div class="form-group">
-                <div class="row">
-                    <label class="control-label col-sm-2">Ime:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" type="text" placeholder="Unesite ime proizvoda" maxlength="30" id="Naziv" name="Naziv" onchange="NazivEmpty()" />
-                    </div>
-                    <label class="col-sm-4" id="Status1"></label>
-                </div>
-                <br />
-                <div class="row">
-                    <label class="control-label col-sm-2">Cena:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" type="number" placeholder="Unesite cenu proizvoda" min="1" id="Cena" name="Cena" onchange="CenaEmpty()" />
-                    </div>
-                    <label class="col-sm-4" id="Status2"></label>
-                </div>
-                <br />
-                <div class="row">
-                    <label class="control-label col-sm-2">Sastojci:</label>
-                    <div class="col-sm-3">
-                        <textarea class="form-control" name="Sastojci" id="Sastojci" style="font-family:sans-serif;font-size:1.2em;"></textarea>
-                    </div>
-                    <label class="col-sm-4" id="Status3"></label>
-                </div>
-                <br />
-                <div class="row">
-                    <label class="control-label col-sm-2">Kategorija:</label>
-                    <div class="col-sm-3">
-                        <select class="form-control" name="KategorijaId" id="KategorijaId">
-                            @foreach (var k in @ViewBag.kategorije)
-                            {
-                                <option value="@k.Id">@k.Naziv</option>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dodaj proizvod</title>
+    <style>
+        div.row {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <script>
+        var naziv = true;
 
-                            }
-                        </select>
-                    </div>
+        function NazivEmpty() {
+            if ($("#Naziv").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Naziv").css("border-color", "Red");
+            } else {
+                $.post("@Url.Action("CheckProductAvailability", "Administrator")",
+                {
+                    userdata: $("#Naziv").val()
+                },
+                function (data) {
+                    if (data == 0) {
+                        $("#Status1").html('<font color="Green"></font>');
+                        $("#Naziv").css("border-color", "GreenYellow");
+                        naziv = true;
+                    } else {
+                        $("#Status1").html('<font color="Red">Proizvod sa ovim nazivom vec postoji!</font>');
+                        $("#Naziv").css("border-color", "Red");
+                        naziv = false;
+                    }
+                });
+            }
+        }
+
+        function CenaEmpty() {
+            if ($("#Cena").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Cena").css("border-color", "Red");
+            } else {
+                $("#Status2").html('');
+                $("#Cena").css("border-color", "lightgray");
+            }
+        }
+        function SastojciEmpty() {
+            if ($("#Sastojci").val() == "") {
+                $("#Status3").html('<font color="Red">Ovo polje mora biti popunjano!</font>');
+                $("#Sastojci").css("border-color", "Red");
+            } else {
+                $("#Status3").html('');
+                $("#Sastojci").css("border-color", "lightgray");
+            }
+        }
+
+        function validateForm() {
+            var dobro = true;
+
+            if ($("#Naziv").val() == "") {
+                $("#Status1").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Naziv").css("border-color", "Red");
+                dobro = false;
+            } else if (naziv) {
+                $("#Status1").html('');
+                $("#Naziv").css("border-color", "GreenYellow");
+            }
+            if ($("#Cena").val() == "") {
+                $("#Status2").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Cena").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status2").html('');
+                $("#Cena").css("border-color", "lightgray");
+            }
+            if ($("#Sastojci").val() == "") {
+                $("#Status3").html('<font color="Red">Ovo polje mora biti popunjeno!</font>');
+                $("#Sastojci").css("border-color", "Red");
+                dobro = false;
+            } else {
+                $("#Status3").html('');
+                $("#Sastojci").css("border-color", "lightgray");
+            }
+
+            return dobro && naziv;
+        }
+    </script>
+</head>
+<body>
+    <h2 class="text-info">Dodajte novi proizvod:</h2>
+    <br />
+    <form method="post" action="~/Administrator/ProizvodDodat" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-sm-2">Ime:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" placeholder="Unesite ime proizvoda" maxlength="30" id="Naziv" name="Naziv" onchange="NazivEmpty()" />
                 </div>
-                <br />
-                <div class="row">
-                    <div class="col-sm-4">
-                        <input class="btn btn-primary" type="submit" value="Dodaj" />
-                    </div>
+                <label class="col-sm-4" id="Status1"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Cena:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="number" placeholder="Unesite cenu proizvoda" min="1" max="1000000" id="Cena" name="Cena" onchange="CenaEmpty()" />
+                </div>
+                <label class="col-sm-4" id="Status2"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Sastojci:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control" name="Sastojci" id="Sastojci" onchange="SastojciEmpty()" style="font-family:sans-serif;font-size:1.2em;"></textarea>
+                </div>
+                <label class="col-sm-4" id="Status3"></label>
+            </div>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Kategorija:</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="KategorijaId" id="KategorijaId">
+                        @foreach (var k in @ViewBag.kategorije)
+                        {
+                            <option value="@k.Id">@k.Naziv</option>
+
+                        }
+                    </select>
                 </div>
             </div>
-        </form>
-    </body>
+            <br />
+            <div class="row">
+                <label class="control-label col-sm-2">Slika:</label>
+                <div class="col-sm-3">
+                    <input type="file" name="ifile" />
+                </div>
+                <label class="col-sm-4" id="Status9"><font color="Red">@ViewBag.Message</font></label>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-4">
+                    <input class="btn btn-primary" type="submit" value="Dodaj" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
 </html>
