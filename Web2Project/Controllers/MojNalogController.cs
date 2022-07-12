@@ -39,6 +39,15 @@ namespace Web2Project.Controllers
                 }
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
             return View();
         }
@@ -58,7 +67,16 @@ namespace Web2Project.Controllers
                     return RedirectToAction("Index", "Authentication");
                 }
             }
-            
+
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
             ViewBag.Message = "";
 
@@ -100,9 +118,10 @@ namespace Web2Project.Controllers
                     string imgext = Path.GetExtension(ifile.FileName).ToLower();
                     if (imgext != ".jpg" && imgext != ".png")
                     {
-                        ViewBag.Message = "Slika mora biti u .jpg ili .png formatu!";
-                        ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
-                        return View("LicniPodaci");
+                        HttpContext.Session.SetString("AlertMessage", "Slika mora biti u .jpg ili .png formatu!");
+                        HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
+
+                        return RedirectToAction("LicniPodaci");
                     }
 
                     flag = true;
@@ -126,7 +145,9 @@ namespace Web2Project.Controllers
                 {
                     if (_userRepository.Existing(korisnickoime))
                     {
-                        HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Korisnicko ime je zauzeto"));
+                        HttpContext.Session.SetString("AlertMessage", "Korisnicko ime je zauzeto");
+                        HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
+
                         return RedirectToAction("LicniPodaci");
                     }
                     else
@@ -141,12 +162,15 @@ namespace Web2Project.Controllers
 
             if (flag)
             {
-                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Licni podaci uspesno izmenjeni!"));
+                HttpContext.Session.SetString("AlertMessage", "Licni podaci uspesno izmenjeni!");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
+
                 HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
             }
             else
             {
-                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Licni podaci nisu izmenjeni!"));
+                HttpContext.Session.SetString("AlertMessage", "Licni podaci nisu izmenjeni!");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
             }
 
             return RedirectToAction("Index");
@@ -167,7 +191,16 @@ namespace Web2Project.Controllers
                     return RedirectToAction("Index", "Authentication");
                 }
             }
-            
+
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
 
             return View();
@@ -189,7 +222,8 @@ namespace Web2Project.Controllers
                     korisnik.Email = email;
                     _userRepository.UpdateKorisnik(korisnik, "Email", email);
 
-                    HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Email uspesno izmenjen!"));
+                    HttpContext.Session.SetString("AlertMessage", "Email uspesno izmenjen!");
+                    HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
                     HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
                 }
@@ -197,18 +231,18 @@ namespace Web2Project.Controllers
                 {
                     if (!isEmail)
                     {
-                        //HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Email nije validan!"));
-                        ViewBag.Message1 = "Email nije validan";
+                        HttpContext.Session.SetString("AlertMessage", "Email nije validan!");
+                        HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
                     }
 
                     if (lozinka != korisnik.Lozinka)
                     {
-                        //HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Neispravna lozinka!"));
-                        ViewBag.Message2 = "Neispravna lozinka";
+                        HttpContext.Session.SetString("AlertMessage", "Neispravna lozinka!");
+                        HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
                     }
 
                     ViewBag.korisnik = korisnik;
-                    return View("Email");
+                    return RedirectToAction("Email");
                 }
             }
             ViewBag.korisnik = korisnik;
@@ -231,6 +265,15 @@ namespace Web2Project.Controllers
                 }
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik")); 
 
             return View();
@@ -251,7 +294,9 @@ namespace Web2Project.Controllers
                     korisnik.Lozinka = novalozinka;
                     _userRepository.UpdateKorisnik(korisnik, "Lozinka", novalozinka);
 
-                    HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Lozinka uspesno izmenjena!"));
+                    HttpContext.Session.SetString("AlertMessage", "Lozinka uspesno izmenjena!");
+                    HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
+
                     HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
                 }
                 else

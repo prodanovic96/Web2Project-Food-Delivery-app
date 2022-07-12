@@ -4,4 +4,33 @@
 @{
 }
 
-@ViewBag.korisnik.KorisnickoIme ulogovan
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Home</title>
+</head>
+<body>
+    @if (ViewBag.AlertMessage != null)
+    {
+        if (ViewBag.Uspesno)
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+    }
+
+    <label>@ViewBag.korisnik.KorisnickoIme uspesno ulogovan!</label>
+</body>
+</html>

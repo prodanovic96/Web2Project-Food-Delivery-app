@@ -11,6 +11,25 @@
         <title>Moj Nalog</title>
     </head>
     <body>
+        @if (ViewBag.AlertMessage != null)
+        {
+            if (ViewBag.Uspesno)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+        }
         <div class="row">
             <div class="col-3">
                 <h2 class="text-info">Licni podaci</h2>

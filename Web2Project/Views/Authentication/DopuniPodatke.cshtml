@@ -63,10 +63,14 @@
         p.tekstic {
             color: grey;
         }
+        div.row {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body onload="javascript:vratiDatum()">
-    <h2>Dovrsite registraciju</h2>
+    <h2 class="text-info">Dovrsite registraciju</h2>
     <br />
     <form method="post" action="~/Authentication/PodaciDopunjeni" onsubmit="return validateForm()">
         <div class="form-group">

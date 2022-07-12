@@ -71,6 +71,15 @@ namespace Web2Project.Controllers
                 } 
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.Ime = "";
             ViewBag.Message = "";
 
@@ -84,13 +93,17 @@ namespace Web2Project.Controllers
             if (korisnickoIme == "" || korisnickoIme == null || lozinka == "" || lozinka == null)
             {
                 HttpContext.Session.SetString("AlertMessage", "Sva polja moraju biti popunjena");
-                return View("Index", "Home");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
+
+                return RedirectToAction("Index");
             }
 
             if (!_userRepository.Existing(korisnickoIme))
             {
                 HttpContext.Session.SetString("AlertMessage", "Ovo korisnicko ime ne postoji");
-                return View("Index", "Home");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
+
+                return RedirectToAction("Index");
             }
 
             lozinka = Operations.hashPassword(lozinka);
@@ -102,8 +115,7 @@ namespace Web2Project.Controllers
                 ViewBag.korisnik = new Korisnik();
                 ViewBag.Message = "Pogresna lozinka";
 
-                HttpContext.Session.SetString("AlertMessage","Pogresna lozinka");
-                return View("Index", "Home");
+                return View("Index");
             }
 
             /*
@@ -113,10 +125,12 @@ namespace Web2Project.Controllers
 
             korisnik.LogIn();
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+            
 
-            HttpContext.Session.SetString("AlertMessage", ("Korisnik: " + korisnickoIme + " uspesno ulogovan!"));
+            HttpContext.Session.SetString("AlertMessage", ("Korisnik " + korisnickoIme + " uspesno ulogovan!"));
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
-            if(korisnik.TipKorisnika == Tip.ADMINISTRATOR)
+            if (korisnik.TipKorisnika == Tip.ADMINISTRATOR)
             {
                 return RedirectToAction("Index", "Administrator");
             }
@@ -135,7 +149,10 @@ namespace Web2Project.Controllers
             HttpContext.SignOutAsync();
 
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(null));
-            return RedirectToAction("Index", "Authentication");
+
+            HttpContext.Session.SetString("AlertMessage", ("Korisnik " + korisnik.KorisnickoIme + " uspesno odjavljen!"));
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
+            return RedirectToAction("Index");
         }
 
         public async Task LogInGoogle()
@@ -157,7 +174,9 @@ namespace Web2Project.Controllers
         {
             if(Adresa == "")
             {
-                HttpContext.Session.SetString("AlertMessage", JsonConvert.SerializeObject("Sva polja moraju biti popunjena"));
+                HttpContext.Session.SetString("AlertMessage", "Sva polja moraju biti popunjena!");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
+
                 return RedirectToAction("Index");
             }
 
@@ -170,6 +189,9 @@ namespace Web2Project.Controllers
             _userRepository.Add(korisnik);
 
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
+
+            HttpContext.Session.SetString("AlertMessage", "Korisnik uspesno registrovan!");
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
             return RedirectToAction("Index", "Potrosac");
         }

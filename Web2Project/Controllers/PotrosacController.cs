@@ -36,6 +36,15 @@ namespace Web2Project.Controllers
                 }
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.korisnik = posetilac;
             return View();
         }

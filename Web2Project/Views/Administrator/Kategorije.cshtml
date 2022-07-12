@@ -9,33 +9,49 @@
     <head>
         <meta name="viewport" content="width=device-width" />
         <title>Kategorije</title>
-        <script>
-            function Delete(url) {
-                swal({
-                    title: "Da li ste sigurni da zelite da obrisete ovu kategoriju?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            type: "DELETE",
-                            url: url,
-                            success: function (data) {
-                                if (data.success) {
-                                    toastr.success(data.message);
-                                }
-                                else {
-                                    toastr.error(data.message);
-                                }                               
-                            }
-                        });
-                    }
-                });
-            }
+        <script type="text/javascript">
+
+            function DeleteJob() {
+                if (confirm("Da li ste sigurni da zelite da obrisete ovu kategoriju?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+                //swal({
+                //    title: "Da li ste sigurni da zelite da obrisete ovu kategoriju?",
+                //    icon: "warning",
+                //    buttons: true,
+                //    dangerMode: true
+                //}).then((willDelete) => {
+                //    if (willDelete) {
+                //        return true;
+                //    }else {
+                //        return false;
+                //    } 
+                //});
+            }           
         </script>
     </head>
     <body>
+        @if (ViewBag.AlertMessage != null)
+        {
+            if (ViewBag.Uspesno)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+        }
         <div class="container row p-0 m-0">
             <div class="col-6">
                 <h2 class="text-info">Kategorije</h2>
@@ -67,7 +83,9 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <a class="btn btn-danger text-white" onclick=Delete('/Administrator/ObrisiKategoriju?id=@item.Id')>Obrisi</a>
+                                        <form name="myForm" method="post" onsubmit="return DeleteJob()" action="~/Administrator/ObrisiKategoriju?id=@item.Id">
+                                            <input class="btn btn-danger text-white" type="submit" value="Obrisi" />
+                                        </form>
                                     </td>
                                 </tr>
                             }

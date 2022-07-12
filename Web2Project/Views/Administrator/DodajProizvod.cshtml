@@ -93,6 +93,25 @@
     </script>
 </head>
 <body>
+    @if (ViewBag.AlertMessage != null)
+    {
+        if (ViewBag.Uspesno)
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+    }
     <h2 class="text-info">Dodajte novi proizvod:</h2>
     <br />
     <form method="post" action="~/Administrator/ProizvodDodat" enctype="multipart/form-data" onsubmit="return validateForm()">
@@ -139,7 +158,6 @@
                 <div class="col-sm-3">
                     <input type="file" name="ifile" />
                 </div>
-                <label class="col-sm-4" id="Status9"><font color="Red">@ViewBag.Message</font></label>
             </div>
             <br />
             <div class="row">

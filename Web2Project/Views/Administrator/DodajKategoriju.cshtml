@@ -60,6 +60,25 @@
     </script>
 </head>
 <body>
+    @if (ViewBag.AlertMessage != null)
+    {
+        if (ViewBag.Uspesno)
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+    }
     <div class="col-6">
         <h2 class="text-info">Dodajte novu kategoriju:</h2>
     </div>
@@ -72,7 +91,7 @@
                     <input class="form-control" type="text" placeholder="Unesite naziv kategorije" maxlength="30" id="Naziv" name="Naziv" onchange="NazivEmpty()" />
                 </div>
                 <label class="col-sm-4" id="Status1"></label>
-            </div>   
+            </div>
             <br />
             <div class="row">
                 <div class="col-sm-4">

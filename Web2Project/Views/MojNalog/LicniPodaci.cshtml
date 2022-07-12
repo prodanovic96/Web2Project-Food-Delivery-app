@@ -17,20 +17,24 @@
 
             if ($("#KorisnickoIme").val() != "") {
                 $.post("@Url.Action("CheckUserAvailability", "Registration")",
-                {
-                    userdata: $("#KorisnickoIme").val()
-                },
-                function (data) {
-                    if (data == 0) {
-                        $("#Status1").html('<font color="Green">Korisnicko ime je slobodno!</font>');
-                        $("#KorisnickoIme").css("border-color", "GreenYellow");
-                        username = true;
-                    } else {
-                        $("#Status1").html('<font color="Red">Ovo korisnicko ime je zauzeto!</font>');
-                        $("#KorisnickoIme").css("border-color", "Red");
-                        username = false;
-                    }
-                });
+                    {
+                        userdata: $("#KorisnickoIme").val()
+                    },
+                    function (data) {
+                        if (data == 0) {
+                            $("#Status1").html('<font color="Green">Korisnicko ime je slobodno!</font>');
+                            $("#KorisnickoIme").css("border-color", "GreenYellow");
+                            username = true;
+                        } else {
+                            $("#Status1").html('<font color="Red">Ovo korisnicko ime je zauzeto!</font>');
+                            $("#KorisnickoIme").css("border-color", "Red");
+                            username = false;
+                        }
+                    });
+            } else {
+                $("#Status1").html('');
+                $("#KorisnickoIme").css("border-color", "lightgrey");
+                username = true;
             }
         }
 
@@ -66,6 +70,25 @@
     </style>
 </head>
 <body onload="javascript:vratiDatum()">
+    @if (ViewBag.AlertMessage != null)
+    {
+        if (ViewBag.Uspesno)
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+    }
     <br /><br />
     <div class="col-12 border p-3">
         <table class="table table-striped table-bordered" style="width:100%">
@@ -75,7 +98,7 @@
                     <th>Ime i prezime</th>
                     <th>Adresa</th>
                     <th>Datum rodjenja</th>
-                    <th></th>                  
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -91,7 +114,7 @@
     </div>
     <br /><br />
 
-    @if (!ViewBag.korisnik.Google) 
+    @if (!ViewBag.korisnik.Google)
     {
         <form method="post" action="~/MojNalog/LicniPodaciPromenjeni" enctype="multipart/form-data" onsubmit="return validateForm()">
             <div class="form-group">
@@ -160,12 +183,12 @@
                 </div>
             </div>
         </form>
-     }
-     else 
-     { 
+    }
+    else
+    {
         <form method="post" action="~/MojNalog/LicniPodaciPromenjeni">
             <div class="row">
-                    <label class="control-label col-sm-2">Nova adresa</label>
+                <label class="control-label col-sm-2">Nova adresa</label>
             </div>
             <div class="row">
                 <div class="col-sm-3">
@@ -173,21 +196,21 @@
                 </div>
             </div>
             <br />
-                <div class="row">
-                    <label class="control-label col-sm-3">Promeni datum rodjenja</label>
+            <div class="row">
+                <label class="control-label col-sm-3">Promeni datum rodjenja</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" type="date" id="DatumRodjenja" name="DatumRodjenja" min='1899-01-01' />
                 </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <input class="form-control" type="date" id="DatumRodjenja" name="DatumRodjenja" min='1899-01-01' />
-                    </div>
-                </div>
+            </div>
             <br />
             <div class="row">
-                    <div class="col-sm-3">
-                        <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
-                    </div>
+                <div class="col-sm-3">
+                    <input class="btn btn-primary" type="submit" value="Sacuvaj izmene" />
                 </div>
+            </div>
         </form>
-     }
+    }
 </body>
 </html>

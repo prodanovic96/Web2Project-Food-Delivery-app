@@ -222,6 +222,25 @@
     </style>
 </head>
 <body onload="javascript:vratiDatum()">
+    @if (ViewBag.AlertMessage != null)
+    {
+        if (ViewBag.Uspesno)
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+    }
     <h2 class="text-info">Registrujte novog korisnika:</h2>
     <br />
     <form method="post" action="~/Registration/Add" enctype="multipart/form-data" onsubmit="return validateForm()">
