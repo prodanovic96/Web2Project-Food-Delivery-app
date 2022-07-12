@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web2Project.Repository;
 
 namespace Web2Project.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220712170500_addedPorudzbina")]
+    partial class addedPorudzbina
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +100,7 @@ namespace Web2Project.Migrations
                     b.ToTable("Korisnik");
                 });
 
-            modelBuilder.Entity("Web2Project.Models.Korpa", b =>
+            modelBuilder.Entity("Web2Project.Models.Porudzbina", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,10 +117,10 @@ namespace Web2Project.Migrations
 
                     b.HasIndex("KorisnikId");
 
-                    b.ToTable("Korpa");
+                    b.ToTable("Porudzbina");
                 });
 
-            modelBuilder.Entity("Web2Project.Models.KorpaProizvod", b =>
+            modelBuilder.Entity("Web2Project.Models.PorudzbinaProizvod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +130,7 @@ namespace Web2Project.Migrations
                     b.Property<int>("Kolicina")
                         .HasColumnType("int");
 
-                    b.Property<int>("KorpaId")
+                    b.Property<int>("PorudzbinaId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProizvodId")
@@ -136,11 +138,11 @@ namespace Web2Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("KorpaId");
+                    b.HasIndex("PorudzbinaId");
 
                     b.HasIndex("ProizvodId");
 
-                    b.ToTable("KorpaProizvod");
+                    b.ToTable("PorudzbinaProizvod");
                 });
 
             modelBuilder.Entity("Web2Project.Models.Proizvod", b =>
@@ -178,25 +180,25 @@ namespace Web2Project.Migrations
                     b.ToTable("Proizvod");
                 });
 
-            modelBuilder.Entity("Web2Project.Models.Korpa", b =>
+            modelBuilder.Entity("Web2Project.Models.Porudzbina", b =>
                 {
                     b.HasOne("Web2Project.Models.Korisnik", "Korisnik")
-                        .WithMany("Korpe")
+                        .WithMany("Porudzbine")
                         .HasForeignKey("KorisnikId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Web2Project.Models.KorpaProizvod", b =>
+            modelBuilder.Entity("Web2Project.Models.PorudzbinaProizvod", b =>
                 {
-                    b.HasOne("Web2Project.Models.Korpa", "Korpa")
-                        .WithMany("KorpeProizvodi")
-                        .HasForeignKey("KorpaId")
+                    b.HasOne("Web2Project.Models.Porudzbina", "Porudzbina")
+                        .WithMany("PorudzbinaProizvod")
+                        .HasForeignKey("PorudzbinaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Web2Project.Models.Proizvod", "Proizvod")
-                        .WithMany("KorpeProizvodi")
+                        .WithMany("PorudzbinaProizvod")
                         .HasForeignKey("ProizvodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

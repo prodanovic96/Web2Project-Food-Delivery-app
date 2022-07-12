@@ -18,7 +18,7 @@ namespace Web2Project.Models
         public bool LogedIn { get; set; }
         public string ImagePath { get; set; }
         public bool Google { get; set; }
-        //public virtual ICollection<Porudzbina> Porudzbine { get; set; }
+        public virtual ICollection<Korpa> Korpe { get; set; }
 
         public Korisnik()
         {

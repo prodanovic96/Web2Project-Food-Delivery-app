@@ -1,20 +1,28 @@
-﻿namespace Web2Project.Models
+﻿using System.Collections.Generic;
+
+namespace Web2Project.Models
 {
     public class Korpa
     {
         public int Id { get; set; }
-
-        public readonly int CenaDostave = 400;
         public float Cena { get; set; }
+        public int KorisnikId { get; set; }
+        public virtual Korisnik Korisnik { get; set; }
+        public virtual ICollection<KorpaProizvod> KorpeProizvodi { get; set; }
 
         public Korpa()
         {
-            Cena = CenaDostave;
+            Cena = 400;
         }
 
-        public void IzracunajCenu(float cena)
+        public void Dodaj(float iznos)
         {
-            Cena += cena;
+            Cena += iznos;
+        }
+
+        public void Oduzmi(float iznos)
+        {
+            Cena -= iznos;
         }
     }
 }

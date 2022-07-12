@@ -48,5 +48,11 @@ namespace Web2Project.Controllers
             ViewBag.korisnik = posetilac;
             return View();
         }
+
+        public IActionResult NovaPorudzbina()
+        {
+
+            return View();
+        }
     }
 }
