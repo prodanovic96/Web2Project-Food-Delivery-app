@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Web2Project.Models
 {
@@ -6,9 +7,14 @@ namespace Web2Project.Models
     {
         public int Id { get; set; }
         public float Cena { get; set; }
+        public Status Status{ get; set; }
+        public string AdresaDostave { get; set; }
+        public string Komentar { get; set; }
+        public DateTime VremePorucivanja { get; set; }
         public int KorisnikId { get; set; }
-        public virtual Korisnik Korisnik { get; set; }
-        public virtual ICollection<KorpaProizvod> KorpeProizvodi { get; set; }
+        public int DostavljacId { get; set; }
+        public Korisnik Korisnik { get; set; }
+        public ICollection<KorpaProizvod> KorpeProizvodi { get; set; }
 
         public Korpa()
         {

@@ -1,0 +1,106 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Prikazi porudzbinu</title>
+    <script type="text/javascript">
+                    window.onload = function () {
+                        swal("Ceka se da neki dostavljac preuzme Vasu porudzbinu!");
+                    };
+    </script>
+
+    <script>
+        var x = setInterval(function () {
+            $.post("@Url.Action("Pocelo", "Potrosac")",
+                {
+                    userdata: $("#korpa").val()
+                },
+                function (data) {
+                    if (data == 1) {
+                        location.href = "https://localhost:44364/Potrosac/TrenutnaPorudzbina";
+                    }
+                });
+        }, 2000);
+    </script>
+</head>
+<body>
+    @if (ViewBag.AlertMessage != null)
+    {
+        if (ViewBag.Uspesno)
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+            </script>
+        }
+    }
+    <div class="container row p-0 m-0">
+        <div class="col-6">
+            <h2 class="text-info">Vasa porudzbina</h2>
+        </div>   
+        <div>
+            <p id="timer"></p>
+        </div>
+        <div class="col-12 border p-3">
+            <table class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr align="center">
+                        <th>Naziv proizvoda</th>
+                        <th>Kolicina</th>
+                        <th>Cena</th>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Stavke.Count != 0)
+                    {
+                        foreach (var item in ViewBag.Stavke)
+                        {
+                            <tr align="center">
+                                <td>@item.Proizvod.Naziv</td>
+                                <td>@item.Kolicina</td>
+                                <td>@item.Proizvod.Cena</td>
+                                <td><img src="@item.Proizvod.ImagePath" height="100" width="100" asp-append-version="true" /></td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+            <div class="flex">
+                <div class="p-3">
+                    <div class="row">
+                        <label class="col-7"><strong>Adresa dostave</strong>: @ViewBag.Korpa.AdresaDostave</label> <br />
+                        <label class="offset-3">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Cena:</strong>@ViewBag.Cena din</label> <br />
+                    </div>
+                    <div class="row">
+                        <label class="col-7"><strong>Komentar</strong>: @ViewBag.Korpa.Komentar</label> <br />
+                        <label class="offset-3"><strong>+ Dostava:</strong>400 din</label> <br />
+                    </div>
+                    <div class="row">
+                        <label class="col-7"></label>
+                        <label class="offset-3">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Ukupno:</strong> @ViewBag.Korpa.Cena din</label>
+                    </div>
+                </div>
+            </div>
+            <input id="korpa" name="korpa" hidden="hidden" value="@ViewBag.Korpa.Id" />
+        </div>
+    </div>
+</body>
+</html>

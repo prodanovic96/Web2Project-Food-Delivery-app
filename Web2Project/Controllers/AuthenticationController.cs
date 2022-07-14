@@ -80,6 +80,8 @@ namespace Web2Project.Controllers
                 HttpContext.Session.SetString("AlertMessage", "");
             }
 
+            
+
             ViewBag.Ime = "";
             ViewBag.Message = "";
 
@@ -117,11 +119,6 @@ namespace Web2Project.Controllers
 
                 return View("Index");
             }
-
-            /*
-            HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
-            Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
-            */
 
             korisnik.LogIn();
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));

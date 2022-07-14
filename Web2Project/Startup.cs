@@ -61,6 +61,8 @@ namespace Web2Project
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IFileUploadService, FileUploadService>();
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IBasketProductRepository, BasketProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

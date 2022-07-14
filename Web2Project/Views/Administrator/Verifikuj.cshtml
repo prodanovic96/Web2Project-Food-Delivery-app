@@ -41,7 +41,9 @@
                             <th>Korisnicko ime</th>
                             <th>Ime i prezime</th>
                             <th>Email</th>
+                            <th>Datum rodjenja</th>
                             <th>Status</th>
+                            <th></th>
                             <td></td>
                             <td></td>
                         </tr>
@@ -55,7 +57,9 @@
                                     <td align="center">@d.KorisnickoIme</td>
                                     <td align="center">@d.Ime  @d.Prezime</td>
                                     <td align="center">@d.Email</td>
+                                    <td align="center">@d.DatumRodjenja.ToString("dd/MM/yyyy")</td>
                                     <td align="center">@d.Verifikovan.ToString()</td>
+                                    <td align="center"><img src="@d.ImagePath" height="100" width="100" asp-append-version="true" /></td>
                                     <td align="center">
                                         <form method="post" action="~/Administrator/Odobren?id=@d.Id">
                                             <input class="btn btn-success" type="submit" value="Odobri" />

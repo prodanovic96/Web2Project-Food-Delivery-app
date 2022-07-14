@@ -5,19 +5,11 @@ using System.Threading.Tasks;
 
 namespace Web2Project.Models
 {
-    public class KorpaProizvod
+    public class Stavka
     {
         public int Id { get; set; }
-        public int Kolicina { get; set; }
-        public int ProizvodId { get; set; }
-        public int KorpaId { get; set; }
-        public Korpa Korpa { get; set; }
         public Proizvod Proizvod { get; set; }
-
-        public KorpaProizvod()
-        {
-            Kolicina = 1;
-        }
-
+        public int Kolicina { get; set; }
+        public int KorpaId { get; set; }
     }
 }

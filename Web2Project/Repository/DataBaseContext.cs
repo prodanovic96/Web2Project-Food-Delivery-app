@@ -29,7 +29,6 @@ namespace Web2Project.Repository
             modelBuilder.Entity<Korisnik>().Property(k => k.Prezime).IsRequired();
             modelBuilder.Entity<Korisnik>().Property(k => k.DatumRodjenja).IsRequired();
             modelBuilder.Entity<Korisnik>().Property(k => k.Adresa).IsRequired();
-            modelBuilder.Entity<Korisnik>().Property(k => k.ImagePath).IsRequired();
             modelBuilder.Entity<Korisnik>().Property(k => k.TipKorisnika).IsRequired();
             modelBuilder.Entity<Korisnik>().Property(k => k.Verifikovan).IsRequired();
 
@@ -46,12 +45,12 @@ namespace Web2Project.Repository
             modelBuilder.Entity<Proizvod>().HasIndex(p => p.Naziv).IsUnique();
             modelBuilder.Entity<Proizvod>().Property(p => p.Sastojci).IsRequired();
             modelBuilder.Entity<Proizvod>().Property(p => p.Cena).IsRequired();
-            modelBuilder.Entity<Proizvod>().Property(p => p.ImagePath).IsRequired();
 
             //// Definisemo tabelu Korpa
             modelBuilder.Entity<Korpa>().HasKey(p => p.Id);
             modelBuilder.Entity<Korpa>().Property(p => p.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Korpa>().Property(p => p.Cena).IsRequired();
+            modelBuilder.Entity<Korpa>().Property(p => p.Status).IsRequired();
 
             // Definisemo tabelu KorpaProizvod
             modelBuilder.Entity<KorpaProizvod>().HasKey(p => p.Id);
@@ -69,22 +68,20 @@ namespace Web2Project.Repository
             modelBuilder.Entity<Korpa>()
                 .HasOne<Korisnik>(p => p.Korisnik)
                 .WithMany(k => k.Korpe)
-                .HasForeignKey(p => p.KorisnikId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(p => p.KorisnikId);
 
             // Proizvod - KorpaProizvod
             modelBuilder.Entity<KorpaProizvod>()
                 .HasOne<Proizvod>(pp => pp.Proizvod)
                 .WithMany(p => p.KorpeProizvodi)
-                .HasForeignKey(pp => pp.ProizvodId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(pp => pp.ProizvodId);
 
             // Proizvod - Kategorija
             modelBuilder.Entity<Proizvod>()
                 .HasOne<Kategorija>(p => p.Kategorija)
                 .WithMany(k => k.Proizvodi)
                 .HasForeignKey(p => p.KategorijaId)
-                .OnDelete(DeleteBehavior.Cascade);           
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

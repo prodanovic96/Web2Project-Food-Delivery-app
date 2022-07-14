@@ -17,14 +17,18 @@ namespace Web2Project.Controllers
         IUserRepository _userRepository;
         IEmailSender _emailSender;
         IFileUploadService _fileUploadService;
+        IBasketRepository _basketRepository;
+        IBasketProductRepository _basketProductRepository;
 
-        public AdministratorController(IProductRepository productRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IEmailSender emailSender, IFileUploadService fileUploadService)
+        public AdministratorController(IProductRepository productRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IEmailSender emailSender, IFileUploadService fileUploadService, IBasketRepository basketRepository, IBasketProductRepository basketProductRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
             _emailSender = emailSender;
             _fileUploadService = fileUploadService;
+            _basketRepository = basketRepository;
+            _basketProductRepository = basketProductRepository;
         }
 
         public IActionResult Index()
@@ -733,7 +737,83 @@ namespace Web2Project.Controllers
         }
 
 
-        
+        public IActionResult SvePorudzbine()
+        {
+            Korisnik administrator = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                administrator = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (administrator == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (administrator.TipKorisnika == Tip.POTROSAC)
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                    else if (administrator.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+            ViewBag.korisnik = administrator;
+
+            List<Korpa> porudzbine = _basketRepository.GetAdminBasket();
+
+            Dictionary<int, float> cene = new Dictionary<int, float>();
+            Dictionary<int, Korisnik> primaoci = new Dictionary<int, Korisnik>();
+            Dictionary<int, Korisnik> dostavljaci = new Dictionary<int, Korisnik>();
+
+            List<Stavka> stavke = new List<Stavka>();
+
+            foreach (var p in porudzbine)
+            {
+                cene.Add(p.Id, p.Cena - 400);
+
+                List<KorpaProizvod> proizvodi = _basketProductRepository.GetAllProducts(p.Id);
+
+                Korisnik primalac = _userRepository.Get(p.KorisnikId);
+                primaoci.Add(p.Id, primalac);
+
+                Korisnik dostavljac = _userRepository.Get(p.DostavljacId);
+                if(dostavljac == null)
+                {
+                    dostavljac = new Korisnik();
+                }
+                dostavljaci.Add(p.Id, dostavljac);
+
+                foreach (var item in proizvodi)
+                {
+                    Stavka stavka = new Stavka();
+                    stavka.KorpaId = p.Id;
+
+                    stavka.Proizvod = _productRepository.Get(item.ProizvodId);
+                    stavka.Kolicina = item.Kolicina;
+
+                    stavke.Add(stavka);
+                }
+            }
+
+
+            ViewBag.Stavke = stavke;
+            ViewBag.Primaoci = primaoci;
+            ViewBag.Dostavljaci = dostavljaci;
+            ViewBag.Cene = cene;
+            ViewBag.porudzbine = porudzbine;
+            return View();
+        }
+
+
+
         // PROVERE NA FRONTU
         public JsonResult CheckCategoryAvailability(string userdata)
         {

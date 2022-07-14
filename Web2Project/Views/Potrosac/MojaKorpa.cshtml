@@ -1,0 +1,104 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Moja korpa</title>
+    </head>
+    <body>
+        @if (ViewBag.AlertMessage != null)
+        {
+            if (ViewBag.Uspesno)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+        }
+        <div class="container row p-0 m-0">
+            <div class="col-6">
+                <h2 class="text-info">Moja korpa</h2>
+            </div>
+            <div class="col-12 border p-3">
+                <table class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr align="center">
+                            <th>Naziv proizvoda</th>
+                            <th>Kolicina</th>
+                            <th>Cena</th>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Stavke.Count != 0)
+                        {
+                            foreach (var item in ViewBag.Stavke)
+                            {
+                                <tr align="center">
+                                    <td>@item.Proizvod.Naziv</td>
+                                    <td>@item.Kolicina</td>
+                                    <td>@item.Proizvod.Cena</td>
+                                    <td><img src="@item.Proizvod.ImagePath" height="100" width="100" asp-append-version="true" /></td>
+                                    <td>
+                                        <a class="btn btn-danger text-white" href="~/Potrosac/UkloniIzKorpe?id=@item.Proizvod.Id">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
+                                            </svg>
+                                            Ukloni iz korpe
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+                        else
+                        {
+                            <tr>
+                                <td align="center" colspan="6"><label>Vasa korpa je prazna!</label></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="col-2 border p-3">
+                    <div class="row">
+                        <label>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Cena:</strong> @ViewBag.Cena din</label> <br />
+                    </div>
+                    <div class="row">
+                        <label>+ <strong>Dostava:</strong> 400 din</label> <br />
+                    </div>
+                    <div class="row">
+                        <label>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Ukupno:</strong>@ViewBag.CenaSaDostavom din</label>
+                    </div>
+                </div>
+                @if (ViewBag.Stavke.Count != 0)
+                {
+                    <div class="row offset-10">
+                        <a class="btn btn-primary text-white" href="~/Potrosac/DovrsiNarudzbu">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                            Dovrsi narudzbu
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </body>
+</html>

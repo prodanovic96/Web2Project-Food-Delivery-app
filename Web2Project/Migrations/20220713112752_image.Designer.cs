@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web2Project.Repository;
 
 namespace Web2Project.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220713112752_image")]
+    partial class image
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,26 +106,17 @@ namespace Web2Project.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdresaDostave")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<float>("Cena")
                         .HasColumnType("real");
 
                     b.Property<int>("DostavljacId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Komentar")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("KorisnikId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("VremePorucivanja")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
