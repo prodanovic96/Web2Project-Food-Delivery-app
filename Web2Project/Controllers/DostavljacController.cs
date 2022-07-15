@@ -295,7 +295,7 @@ namespace Web2Project.Controllers
         {
             Korpa korpa = _basketRepository.GetBasketById(int.Parse(userdata));
 
-            DateTime broj = korpa.VremePorucivanja.AddSeconds(10);
+            DateTime broj = korpa.VremePorucivanja.AddSeconds(30);
 
             TimeSpan span = broj - DateTime.Now;
             
