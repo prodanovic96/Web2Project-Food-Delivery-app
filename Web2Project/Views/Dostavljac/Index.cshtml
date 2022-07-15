@@ -6,16 +6,46 @@
 
 
 
-@if (ViewBag.korisnik.Verifikovan == Zahtev.PROCESIRA_SE)
-{
-    <label> Vas nalog se jos uvek procesuira, administrator ce obraditi Vas zahtev u najkracem mogucem roku! </label >
-}
-else if (ViewBag.korisnik.Verifikovan == Zahtev.PRIHVACEN)
-{
-    <label>@ViewBag.korisnik.KorisnickoIme uspesno ulogovan! </label>
-    <label>Vas profil je verifikovan, mozete poceti sa radom!</label>
-}
-else
-{
-    <label><font color="Red">Vas nalog je odbijen od strane administratora, ne mozete koristiti usluge naseg sistema!</font></label>
-}
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        @if (ViewBag.AlertMessage != null)
+        {
+            if (ViewBag.Uspesno)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+        }
+
+        @if (ViewBag.korisnik.Verifikovan == Zahtev.PROCESIRA_SE)
+        {
+            <label> Vas nalog se jos uvek procesuira, administrator ce obraditi Vas zahtev u najkracem mogucem roku! </label>
+        }
+        else if (ViewBag.korisnik.Verifikovan == Zahtev.PRIHVACEN)
+        {
+            <label>@ViewBag.korisnik.KorisnickoIme uspesno ulogovan! </label>
+            <label>Vas profil je verifikovan, mozete poceti sa radom!</label>
+        }
+        else
+        {
+            <label><font color="Red">Vas nalog je odbijen od strane administratora, ne mozete koristiti usluge naseg sistema!</font></label>
+        }
+    </body>
+</html>
+
+

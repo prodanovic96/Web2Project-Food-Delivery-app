@@ -17,6 +17,25 @@
     </style>
     </head>
     <body>
+        @if (ViewBag.AlertMessage != null)
+        {
+            if (ViewBag.Uspesno)
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.success("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+            else
+            {
+                <script type="text/javascript">
+                    window.onload = function () {
+                        toastr.error("@ViewBag.AlertMessage");
+                    };
+                </script>
+            }
+        }
         <div class="container row p-0 m-0">
             @if (ViewBag.porudzbine.Count == 0)
             {

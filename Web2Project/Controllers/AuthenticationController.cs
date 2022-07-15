@@ -17,23 +17,6 @@ namespace Web2Project.Controllers
     {
         IUserRepository _userRepository;
 
-        /*
-          
-        https://medium.com/c-sharp-progarmming/tutorial-code-first-approach-in-asp-net-core-mvc-with-ef-5baf5af696e9
-        https://www.learnentityframeworkcore.com/dbcontext/modifying-data
-        https://www.learnentityframeworkcore.com/dbcontext/modifying-data
-        https://www.entityframeworktutorial.net/efcore/configure-one-to-one-relationship-using-fluent-api-in-ef-core.aspx
-        https://docs.oracle.com/cd/E17952_01/connector-net-en/connector-net-entityframework-core-example.html
-        https://docs.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli
-        https://stackoverflow.com/questions/21573550/setting-unique-constraint-with-fluent-api
-        https://www.learnentityframeworkcore.com/configuration/fluent-api/hasforeignkey-method
-
-        Bitno
-        https://www.learnentityframeworkcore.com/dbcontext/modifying-data
-        https://medium.com/c-sharp-progarmming/tutorial-code-first-approach-in-asp-net-core-mvc-with-ef-5baf5af696e9
-
-         */
-
         public AuthenticationController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
@@ -140,7 +123,21 @@ namespace Web2Project.Controllers
 
         public IActionResult Logout()
         {
-            Korisnik korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            Korisnik korisnik = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                korisnik = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (korisnik == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
 
             korisnik.LogOut();
             HttpContext.SignOutAsync();
@@ -233,16 +230,12 @@ namespace Web2Project.Controllers
                 korisnik.ImagePath = claims.Where(e => e.Type.Contains("picture")).FirstOrDefault().Value;
                 korisnik.Google = true;
 
-
                 HttpContext.Session.SetString("PrivremeniKorisnik", JsonConvert.SerializeObject(korisnik));
-
-                // Saznaj datum rodjenja
 
                 return RedirectToAction("DopuniPodatke");
             }
 
             korisnik.LogedIn = true;
-
             HttpContext.Session.SetString("UlogovanKorisnik", JsonConvert.SerializeObject(korisnik));
 
             return RedirectToAction("Index", "Potrosac");

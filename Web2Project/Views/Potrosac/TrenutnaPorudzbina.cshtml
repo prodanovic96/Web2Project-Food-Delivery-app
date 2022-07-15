@@ -13,6 +13,7 @@
         var countDownDate;
 
         function vreme() {
+            toastr.success("@ViewBag.AlertMessage");
             $.post("@Url.Action("VratiVreme", "Dostavljac")",
                     {
                         userdata: $("#korpa").val()
@@ -43,31 +44,17 @@
             if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("demo").innerHTML = "";
-                location.href = "https://localhost:44364/Potrosac/Index";
+                $.post("@Url.Action("Gotovo", "Potrosac")",
+                function (data) {
+                    if (data == 1) {
+                        location.href = "https://localhost:44364/Potrosac/Index";
+                    }
+                });
             }
         }, 1000);
     </script>
 </head>
 <body onload="vreme()">
-    @if (ViewBag.AlertMessage != null)
-    {
-        if (ViewBag.Uspesno)
-        {
-            <script type="text/javascript">
-                    window.onload = function () {
-                        toastr.success("@ViewBag.AlertMessage");
-                    };
-            </script>
-        }
-        else
-        {
-            <script type="text/javascript">
-                    window.onload = function () {
-                        toastr.error("@ViewBag.AlertMessage");
-                    };
-            </script>
-        }
-    }
     <div class="container row p-0 m-0">
         @if (ViewBag.Korpa == null)
         {

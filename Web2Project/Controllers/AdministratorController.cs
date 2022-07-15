@@ -74,7 +74,7 @@ namespace Web2Project.Controllers
         }
 
 
-        //  PROIZVOD
+        
         public IActionResult Proizvodi()
         {
             Korisnik administrator = new Korisnik();
@@ -237,6 +237,7 @@ namespace Web2Project.Controllers
             }
 
             _productRepository.UpdateProperty(proizvod, "ImagePath", imagePath);
+
             HttpContext.Session.SetString("AlertMessage", "Novi proizvod uspesno dodat!");
             HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
@@ -245,6 +246,34 @@ namespace Web2Project.Controllers
 
         public IActionResult ObrisiProizvod(int id)
         {
+            Korisnik administrator = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                administrator = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (administrator == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (administrator.TipKorisnika == Tip.POTROSAC)
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                    else if (administrator.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
+
             if (_productRepository.Existing(id))
             {
                 _productRepository.DeleteProduct(id);
@@ -356,6 +385,14 @@ namespace Web2Project.Controllers
 
                 if (noviProizvod.Naziv != null && noviProizvod.Naziv != "" && noviProizvod.Naziv != proizvod.Naziv)
                 {
+                    if (_productRepository.Existing(noviProizvod.Naziv))
+                    {
+                        HttpContext.Session.SetString("AlertMessage", "Proizvod sa ovim nazivom vec postoji!");
+                        HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
+
+                        return RedirectToAction("IzmeniProizvod");
+                    }
+
                     proizvod.Naziv = noviProizvod.Naziv;
                     flag = true;
 
@@ -422,7 +459,8 @@ namespace Web2Project.Controllers
             return RedirectToAction("Proizvodi");
         }
 
-        // KATEGORIJE
+
+
         public IActionResult Kategorije()
         {
             Korisnik administrator = new Korisnik();
@@ -531,6 +569,32 @@ namespace Web2Project.Controllers
 
         public IActionResult ObrisiKategoriju(int id)
         {
+            Korisnik administrator = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                administrator = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (administrator == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (administrator.TipKorisnika == Tip.POTROSAC)
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                    else if (administrator.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
             if (_categoryRepository.Existing(id))
             {
                 _categoryRepository.DeleteCategory(id);
@@ -641,7 +705,7 @@ namespace Web2Project.Controllers
         }
 
 
-        // VERIFIKACIJA
+
         public IActionResult Verifikuj()
         {
             Korisnik administrator = new Korisnik();
@@ -690,13 +754,39 @@ namespace Web2Project.Controllers
         [HttpPost]
         public IActionResult Odobren(int id)
         {
+            Korisnik administrator = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                administrator = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (administrator == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (administrator.TipKorisnika == Tip.POTROSAC)
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                    else if (administrator.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             Korisnik korisnik = _userRepository.Get(id);
 
             if(korisnik.Verifikovan == Zahtev.PROCESIRA_SE)
             {
                 _userRepository.UpdateKorisnik(korisnik, "Verifikovan", Zahtev.PRIHVACEN.ToString());
 
-                // Mejl bi trebao da bude poslat na korisnik.Email
                 Message message = new Message(new string[] { "markoprodanovic96@gmail.com" }, "[Web 2] - Projekat", "Vas profil je verifikovan, mozete poceti sa radom!");
                 _emailSender.SendEmail(message);
 
@@ -715,6 +805,33 @@ namespace Web2Project.Controllers
         [HttpPost]
         public IActionResult Odbijen(int id)
         {
+            Korisnik administrator = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                administrator = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (administrator == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (administrator.TipKorisnika == Tip.POTROSAC)
+                    {
+                        return RedirectToAction("Index", "Potrosac");
+                    }
+                    else if (administrator.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             Korisnik korisnik = _userRepository.Get(id);
 
             if(korisnik.Verifikovan == Zahtev.PROCESIRA_SE)
@@ -814,7 +931,6 @@ namespace Web2Project.Controllers
 
 
 
-        // PROVERE NA FRONTU
         public JsonResult CheckCategoryAvailability(string userdata)
         {
             if (_categoryRepository.Existing(userdata))

@@ -6,10 +6,15 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Verifikuj dostavljace</title>
-    </head>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Verifikuj dostavljace</title>
+    <style>
+        #bottom_row_home {
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
     <body>
         @if (ViewBag.AlertMessage != null)
         {
@@ -30,58 +35,100 @@
                 </script>
             }
         }
-        <div class="container row p-0 m-0">
-            <div class="col-6">
-                <h2 class="text-info">Dostavljaci u sistemu</h2>
-            </div>
-            <div class="col-12 border p-3">
-                <table class="table table-striped table-bordered" style="width:100%">
-                    <thead>
-                        <tr align="center">
-                            <th>Korisnicko ime</th>
-                            <th>Ime i prezime</th>
-                            <th>Email</th>
-                            <th>Datum rodjenja</th>
-                            <th>Status</th>
-                            <th></th>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (ViewBag.dostavljaci.Count != 0)
-                        {
-                            @foreach (var d in ViewBag.dostavljaci)
-                            {
-                                <tr>
-                                    <td align="center">@d.KorisnickoIme</td>
-                                    <td align="center">@d.Ime  @d.Prezime</td>
-                                    <td align="center">@d.Email</td>
-                                    <td align="center">@d.DatumRodjenja.ToString("dd/MM/yyyy")</td>
-                                    <td align="center">@d.Verifikovan.ToString()</td>
-                                    <td align="center"><img src="@d.ImagePath" height="100" width="100" asp-append-version="true" /></td>
-                                    <td align="center">
-                                        <form method="post" action="~/Administrator/Odobren?id=@d.Id">
-                                            <input class="btn btn-success" type="submit" value="Odobri" />
-                                        </form>
-                                    </td>
-                                    <td align="center">
-                                        <form method="post" action="~/Administrator/Odbijen?id=@d.Id">
-                                            <input class="btn btn-danger" type="submit" value="Odbij" />
-                                        </form>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
+    <div class="container row p-0 m-0">
+        <div class="col-6">
+            <h2 class="text-info">Dostavljaci koji cekaju verifikaciju</h2>
+        </div>
+        <div class="col-12 border p-3">
+            <table class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr align="center">
+                        <th>Korisnicko ime</th>
+                        <th>Ime i prezime</th>
+                        <th>Email</th>
+                        <th>Datum rodjenja</th>
+                        <th>Status</th>
+                        <th></th>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.dostavljaci.Count != 0)
+                    {
+                        @foreach (var d in ViewBag.dostavljaci)
                         {
                             <tr>
-                                <td align="center" colspan="6"><label>U sistemu ne postoje dostavljaci koji cekaju na verifikaciju!</label></td>
+                                <td align="center">@d.KorisnickoIme</td>
+                                <td align="center">@d.Ime  @d.Prezime</td>
+                                <td align="center">@d.Email</td>
+                                <td align="center">@d.DatumRodjenja.ToString("dd/MM/yyyy")</td>
+                                <td align="center">@d.Verifikovan.ToString()</td>
+                                <td align="center"><img src="@d.ImagePath" height="100" width="100" asp-append-version="true" /></td>
+                                <td align="center">
+                                    <form method="post" action="~/Administrator/Odobren?id=@d.Id">
+                                        <input class="btn btn-success" type="submit" value="Odobri" />
+                                    </form>
+                                </td>
+                                <td align="center">
+                                    <form method="post" action="~/Administrator/Odbijen?id=@d.Id">
+                                        <input class="btn btn-danger" type="submit" value="Odbij" />
+                                    </form>
+                                </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td align="center" colspan="6"><label>U sistemu ne postoje dostavljaci koji cekaju na verifikaciju!</label></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+        <div class="row col-12" id="bottom_row_home">
+
+        </div>
+        <div class="col-6">
+            <h2 class="text-info">Odobreni dostavljaci u sistemu</h2>
+        </div>
+        <div class="col-12 border p-3">
+            <table class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr align="center">
+                        <th>Korisnicko ime</th>
+                        <th>Ime i prezime</th>
+                        <th>Email</th>
+                        <th>Datum rodjenja</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.dostavljaciPrihvaceni.Count != 0)
+                    {
+                        @foreach (var d in ViewBag.dostavljaciPrihvaceni)
+                        {
+                            <tr>
+                                <td align="center">@d.KorisnickoIme</td>
+                                <td align="center">@d.Ime  @d.Prezime</td>
+                                <td align="center">@d.Email</td>
+                                <td align="center">@d.DatumRodjenja.ToString("dd/MM/yyyy")</td>
+                                <td align="center">@d.Verifikovan.ToString()</td>
+                                <td align="center"><img src="@d.ImagePath" height="100" width="100" asp-append-version="true" /></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td align="center" colspan="6"><label>U sistemu ne postoje dostavljaci koji cekaju na verifikaciju!</label></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
     </body>
 </html>

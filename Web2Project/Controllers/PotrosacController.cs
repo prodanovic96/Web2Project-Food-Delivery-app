@@ -97,6 +97,10 @@ namespace Web2Project.Controllers
 
             ViewBag.korisnik = potrosac;
 
+            Korpa korpaDostavljaSe = _basketRepository.GetBasketByStatus(potrosac.Id, Status.DostavljaSe);
+            if (korpaDostavljaSe != null)
+                return RedirectToAction("TrenutnaPorudzbina");
+
             Korpa korpaCeka = _basketRepository.GetBasketByStatus(potrosac.Id, Status.CekaDostavljaca);
 
             if (korpaCeka != null)
@@ -120,7 +124,32 @@ namespace Web2Project.Controllers
 
         public IActionResult DodajuKorpu(int id)
         {
-            Korisnik potrosac = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            Korisnik potrosac = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                potrosac = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (potrosac == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (potrosac.TipKorisnika == Tip.ADMINISTRATOR)
+                    {
+                        return RedirectToAction("Index", "Administrator");
+                    }
+                    else if (potrosac.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
 
             Proizvod proizvod = _productRepository.Get(id);
 
@@ -172,7 +201,32 @@ namespace Web2Project.Controllers
 
         public IActionResult UkloniIzKorpe(int id)
         {
-            Korisnik potrosac = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            Korisnik potrosac = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                potrosac = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (potrosac == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (potrosac.TipKorisnika == Tip.ADMINISTRATOR)
+                    {
+                        return RedirectToAction("Index", "Administrator");
+                    }
+                    else if (potrosac.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
             Korpa korpa = _basketRepository.GetBasketByStatus(potrosac.Id, Status.FormiraSe);
             Proizvod proizvod = _productRepository.Get(id);
             KorpaProizvod korpaProizvod = _basketProductRepository.Existing(proizvod.Id, korpa.Id);
@@ -218,6 +272,10 @@ namespace Web2Project.Controllers
             }
             ViewBag.korisnik = posetilac;
 
+            Korpa korpaDostavljaSe = _basketRepository.GetBasketByStatus(posetilac.Id, Status.DostavljaSe);
+            if (korpaDostavljaSe != null)
+                return RedirectToAction("TrenutnaPorudzbina");
+
             Korpa korpaCeka = _basketRepository.GetBasketByStatus(posetilac.Id, Status.CekaDostavljaca);
 
             if (korpaCeka != null)
@@ -257,8 +315,6 @@ namespace Web2Project.Controllers
 
                 HttpContext.Session.SetString("AlertMessage", "");
             }
-            HttpContext.Session.SetString("AlertMessage", "Porudzbina uspesno kreirana, ceka se dostavljac da je preuzme!");
-            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
             ViewBag.Cena = korpa.Cena - 400;
             ViewBag.CenaSaDostavom = korpa.Cena;
@@ -302,7 +358,32 @@ namespace Web2Project.Controllers
 
         public IActionResult NarudzbaPotvrdjena(string Adresa, string Komentar)
         {
-            Korisnik potrosac = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+            Korisnik potrosac = new Korisnik();
+
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UlogovanKorisnik")))
+            {
+                potrosac = JsonConvert.DeserializeObject<Korisnik>(HttpContext.Session.GetString("UlogovanKorisnik"));
+
+                if (potrosac == null)
+                {
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    if (potrosac.TipKorisnika == Tip.ADMINISTRATOR)
+                    {
+                        return RedirectToAction("Index", "Administrator");
+                    }
+                    else if (potrosac.TipKorisnika == Tip.DOSTAVLJAC)
+                    {
+                        return RedirectToAction("Index", "Dostavljac");
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
             Korpa korpa = _basketRepository.GetBasketByStatus(potrosac.Id, Status.FormiraSe);
 
             if(Komentar == null)
@@ -319,6 +400,8 @@ namespace Web2Project.Controllers
             korpa.Status = Status.CekaDostavljaca;
             _basketRepository.UpdateStatus(korpa);
 
+            HttpContext.Session.SetString("AlertMessage", "Porudzbina uspesno kreirana, ceka se dostavljac da je preuzme!");
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
             return RedirectToAction("MojaKorpa");
         }
@@ -495,6 +578,15 @@ namespace Web2Project.Controllers
                 stavke.Add(stavka);
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.Dostavljac = _userRepository.Get(porudzbina.DostavljacId);
             ViewBag.Korpa = porudzbina;
             ViewBag.Stavke = stavke;
@@ -508,12 +600,23 @@ namespace Web2Project.Controllers
 
             if(porudzbina.Status == Status.DostavljaSe)
             {
+                HttpContext.Session.SetString("AlertMessage", "Dostavljac je preuzeo vasu porudzbinu!");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
+
                 return Json(1);
             }
             else
             {
                 return Json(0);
             }
+        }
+
+        public JsonResult Gotovo()
+        {
+            HttpContext.Session.SetString("AlertMessage", "Porudzbina Vam je uspesno dostavljena!");
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
+
+            return Json(1);
         }
     }
 }

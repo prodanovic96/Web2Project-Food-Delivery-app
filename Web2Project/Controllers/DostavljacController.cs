@@ -54,6 +54,15 @@ namespace Web2Project.Controllers
                 return RedirectToAction("Index", "Authentication");
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             ViewBag.korisnik = dostavljac;
             return View();
         }
@@ -122,6 +131,16 @@ namespace Web2Project.Controllers
                 }
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
+
             ViewBag.Stavke = stavke;
             ViewBag.Primaoci = primaoci;
             ViewBag.Cene = cene;
@@ -163,14 +182,16 @@ namespace Web2Project.Controllers
             Korpa aktivna = _basketRepository.GetDostavljacActiveBasket(dostavljac.Id);
             if (aktivna != null)
             {
-                // Ispis da nas dostavljac vec dostavlja neku porudzbinu
+                HttpContext.Session.SetString("AlertMessage", "Dostavljac trenutno dostavlja drugu porudzbinu!");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
 
                 return RedirectToAction("TrenutnaPorudzbina");
             }
 
             if (!_basketRepository.DostavljacEmpty(id))
             {
-                // Ispis da je drugi dostavljac uzeo ovu porudzbinu
+                HttpContext.Session.SetString("AlertMessage", "Drugi dostavljac je uzeo ovu porudzbinu pre vas!");
+                HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(false));
 
                 return RedirectToAction("NovePorudzbine");
             }
@@ -181,12 +202,18 @@ namespace Web2Project.Controllers
 
             _basketRepository.DostavljacPreuzima(korpa);
 
+            HttpContext.Session.SetString("AlertMessage", "Uspesno ste preuzeli porudzbinu!");
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
+
             return RedirectToAction("TrenutnaPorudzbina");
         }
 
         public JsonResult Gotovo(string userdata)
         {
             Korpa porudzbina = _basketRepository.GetBasketById(int.Parse(userdata));
+
+            HttpContext.Session.SetString("AlertMessage", "Porudzbina uspesno dostavljena!");
+            HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
 
             porudzbina.Status = Status.Zavrsena;
             _basketRepository.UpdateStatus(porudzbina);
@@ -245,6 +272,15 @@ namespace Web2Project.Controllers
                 stavke.Add(stavka);
             }
 
+            string message = HttpContext.Session.GetString("AlertMessage");
+            if (message != "" && message != null)
+            {
+                ViewBag.AlertMessage = message;
+                ViewBag.Uspesno = JsonConvert.DeserializeObject<bool>(HttpContext.Session.GetString("Uspesno"));
+
+                HttpContext.Session.SetString("AlertMessage", "");
+            }
+
             porudzbina.VremePorucivanja = DateTime.Now;
 
             ViewBag.Primalac = _userRepository.Get(porudzbina.KorisnikId);
@@ -259,7 +295,7 @@ namespace Web2Project.Controllers
         {
             Korpa korpa = _basketRepository.GetBasketById(int.Parse(userdata));
 
-            DateTime broj = korpa.VremePorucivanja.AddSeconds(20);
+            DateTime broj = korpa.VremePorucivanja.AddSeconds(10);
 
             TimeSpan span = broj - DateTime.Now;
             

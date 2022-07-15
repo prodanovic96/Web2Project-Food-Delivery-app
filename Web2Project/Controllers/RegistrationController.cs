@@ -139,6 +139,9 @@ namespace Web2Project.Controllers
                 {
                     korisnik.Verifikovan = Zahtev.PRIHVACEN;
 
+                    Message message = new Message(new string[] { "markoprodanovic96@gmail.com" }, "[Web 2] - Projekat", "Uspesno ste se registrovali na sistem, mozete koristiti usluge naseg sistema!");
+                    _emailSender.SendEmail(message);
+
                     HttpContext.Session.SetString("AlertMessage", "Korisnik uspesno registrovan!");
                     HttpContext.Session.SetString("Uspesno", JsonConvert.SerializeObject(true));
                 }

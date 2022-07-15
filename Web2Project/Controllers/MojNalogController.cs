@@ -133,7 +133,7 @@ namespace Web2Project.Controllers
                         _userRepository.UpdateKorisnik(korisnik, "ImagePath", korisnik.ImagePath);
                     }
                 }
-                if (!DatumRodjenja.ToString().Contains("01-Jan-01"))
+                if (!DatumRodjenja.ToString().Contains("01-Jan-01") && DatumRodjenja > DateTime.Now)
                 {
                     flag = true;
                     korisnik.DatumRodjenja = DatumRodjenja;
