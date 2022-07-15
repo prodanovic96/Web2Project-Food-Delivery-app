@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Web2Project.Models;
 using MimeKit;
 
-namespace Web2Project.Helper
+namespace Web2Project.Services
 {
     public class EmailSender : IEmailSender
     {

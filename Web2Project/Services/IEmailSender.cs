@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web2Project.Models;
 
-namespace Web2Project.Helper
+namespace Web2Project.Services
 {
     public interface IEmailSender
     {

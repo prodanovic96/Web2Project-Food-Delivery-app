@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Web2Project.Helper
+namespace Web2Project.Services
 {
     public class FileUploadService : IFileUploadService
     {
